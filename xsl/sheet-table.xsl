@@ -128,7 +128,7 @@
 		<td><!-- details --></td>
 	</xsl:template>
 
-	<!-- AUTO OVERRIDE some common headers with dutch name........................................................... -->
+	<!-- AUTO OVERRIDE some common headers........................................................... -->
 	<!--<xsl:template match="@id" mode="attributes-header">
 		<th />
 	</xsl:template>
@@ -234,16 +234,6 @@
 	<!-- MANUAL....................................................................................... -->
 
 	<!-- HULP TEMPLATES -->
-	<xsl:template match="@last_aka">
-		<xsl:text> (</xsl:text>
-		<xsl:value-of select="." />
-		<xsl:text>)</xsl:text>
-	</xsl:template>
-	<xsl:template match="@first_aka">
-		<xsl:text> (</xsl:text>
-		<xsl:value-of select="." />
-		<xsl:text>)</xsl:text>
-	</xsl:template>
 	<xsl:template match="@aka">
 		<xsl:text> (</xsl:text>
 		<xsl:value-of select="." />

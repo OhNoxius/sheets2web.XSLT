@@ -17,26 +17,5 @@
 	</xsl:template>
 
 	<!-- MANUAL override -->
-	<xsl:template match="belgianjazzwiki">
-		<h1>
-			<a class="heading" href="belgianjazzwiki.html">Belgian Jazz Wiki</a>
-			<span class="details"> (<a href="https://docs.google.com/spreadsheets/d/1GW-fs45EtO0ODb3riHRF9A4DHszCQd_r0AyvBw5veqw/edit?usp=sharing" id="linkEdit" class="link" target="_blank">bewerk...</a>)</span>
-		</h1>
-	</xsl:template>
-
-	<xsl:template match="jazzmovies_belgium">
-		<h1>
-			<a class="heading" href="jazzmovies.html">Belgian Jazz Movies</a>
-			<span class="details"> (<a href="https://docs.google.com/spreadsheets/d/1jZyRvTJaSAFY_dspknz7wQLiHmgekkAJ2FCChWUxZ0M/edit?usp=sharing" id="linkEdit" class="link" target="_blank">bewerk...</a>)</span>
-		</h1>
-	</xsl:template>
-	
-	<xsl:template match="jazzconcerts_belgium">
-		<h1>
-			<a class="heading" href="jazzconcerts.html">Jazz concerts in Belgium</a>
-			<!--<span class="details"> (<a href="https://docs.google.com/spreadsheets/d/1jZyRvTJaSAFY_dspknz7wQLiHmgekkAJ2FCChWUxZ0M/edit?usp=sharing" id="linkEdit" class="link" target="_blank">bewerk...</a>)</span>-->
-		</h1>
-		<!--<h2>A History</h2>-->
-	</xsl:template>
 
 </xsl:stylesheet>
