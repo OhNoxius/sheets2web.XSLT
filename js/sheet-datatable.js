@@ -21,15 +21,15 @@ function makeDataTable(tableid) {
         });
 
         //format "; " so that each item comes on a newline?
-        //niet nodig als de white-space correct is in de <td>, gekozen voor =pre-line
-        //var cell, regex, res;
-        /*  $('table#' + tableid + ' td:contains("\/")').html(function () {
+        //niet nodig als de white-space correct is in de <td>... momenteel gekozen voor =pre-line
+        /*  var cell, regex, res;
+        $('table#' + tableid + ' td:contains("\/")').html(function () {
              regex = /\//gi;
              cell = $(this).text();
              res = cell.replace(regex, "\n");
              return res;
-         }); */
-        /*  $('table#' + tableid + ' td:contains("\r")').html(function() {
+         });
+        $('table#' + tableid + ' td:contains("\r")').html(function() {
             var regex = /\r/gi;
             cell = $(this).text();
             var res = cell.replace(regex, "\n");
@@ -64,7 +64,7 @@ function makeDataTable(tableid) {
                 "targets": 'date',
                 "className": 'date',
                 "width": "7em",
-                // "type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
+                //"type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
             },
             {
                 "targets": 'collection',
