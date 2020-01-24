@@ -37,6 +37,8 @@ function makeDataTable(tableid) {
         }); */
 
         var table = $('table#' + tableid).DataTable({
+            "scrollY": "calc(100vh - 50px - 2*36px - 20px)",
+            "scrollCollapse": true,
             "paging": false,
             "ordering": true,
             "order-column": false,
