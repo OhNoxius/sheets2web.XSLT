@@ -51,7 +51,7 @@
 			<xsl:apply-templates select="child::*" mode="children-header" />
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="attribute::*" mode="attributes-header" priority="0">
 		<xsl:variable name="nextpos" select="position()+1" />
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
@@ -76,7 +76,7 @@
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
 	<xsl:template match="child::*" mode="autovalues">
-		<tr>
+		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 			<xsl:choose>
 				<xsl:when test="$edge = 'true'">
@@ -129,10 +129,15 @@
 	</xsl:template>
 
 	<!-- AUTO OVERRIDE some common headers........................................................... -->
-	<!--<xsl:template match="@id" mode="attributes-header">
-		<th />
+	<xsl:template match="@id" mode="attributes-header">
+		<!--<xsl:attribute name="id">
+			<xsl:value-of select="." />
+		</xsl:attribute>-->
 	</xsl:template>
-	<xsl:template match="_" mode="attributes-header">
+	<xsl:template match="@id" mode="attributes-values">
+		<!--<xsl:value-of select="." />-->
+	</xsl:template>
+	<!--<xsl:template match="_" mode="attributes-header">
 		<th>°</th>
 	</xsl:template>
 	<xsl:template match="@last" mode="attributes-header">
@@ -238,9 +243,6 @@
 		<xsl:text> (</xsl:text>
 		<xsl:value-of select="." />
 		<xsl:text>)</xsl:text>
-	</xsl:template>
-	<xsl:template match="@id">
-		<xsl:value-of select="." />
 	</xsl:template>
 	<xsl:template match="@zip">
 		<xsl:value-of select="." />
