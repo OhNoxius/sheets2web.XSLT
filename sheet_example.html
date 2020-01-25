@@ -23,7 +23,10 @@
 	<!-- <script src="js/timeline_render.js"></script> -->
 
 	<script>
-		var datafile = 'sheet.xml';
+		var page = window.location.pathname.split("/").pop();
+		var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
+		//console.log(file);
+		//var datafile = 'sheet_example.xml';
 	</script>
 </head>
 
