@@ -118,7 +118,7 @@
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
 	<xsl:template match="child::*" mode="autovalues">
-		<tr>
+		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 
 			<xsl:apply-templates select="attribute::*" mode="attributes-values">
@@ -160,6 +160,16 @@
 	</xsl:template>
 	<xsl:template match="child::*[1]" mode="details-control-values">
 		<td><!-- details --></td>
+	</xsl:template>
+	
+	<!-- AUTO OVERRIDE some common headers........................................................... -->
+	<xsl:template match="@id" mode="attributes-header">
+		<!--<xsl:attribute name="id">
+			<xsl:value-of select="." />
+		</xsl:attribute>-->
+	</xsl:template>
+	<xsl:template match="@id" mode="attributes-values">
+		<!--<xsl:value-of select="." />-->
 	</xsl:template>
 
 </xsl:stylesheet>

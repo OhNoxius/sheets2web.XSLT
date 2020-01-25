@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //LOAD XML, this is the first action where every other action should wait for
     loadDocRE(datafile, xml).then(function (xmlDoc) {
-        //console.log("jazzmovies_belgium.xml LOADED!", response);
 
         var promiseTable = loadDocRE('xsl/linkedsheets.xsl');
         var promiseHeader = loadDocRE('xsl/sheet-header.xsl');
