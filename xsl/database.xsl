@@ -7,6 +7,7 @@
 
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyzéèëêàçö'" />
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZEEEEACO'" />
+	<xsl:variable name="mainsheet" select="name(/*[1]/*[1])" />
 
 	<!-- CHOOSE MODE: main sheet OR find childnodes in linkedsheet -->
 	<xsl:template match="/">
@@ -30,7 +31,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="*" mode="keys" />
-				<xsl:apply-templates select="*[1]" mode="main" />
+				<xsl:apply-templates select="*[1]" mode="mainsheet" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -78,13 +79,13 @@
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
 			<tbody>
-				<xsl:apply-templates select="child::*[@concert = $id]" mode="autovalues" />
+				<xsl:apply-templates select="child::*[attribute::*[local-name() = $mainsheet] = $id]" mode="autovalues" />
 			</tbody>
 		</table>
 	</xsl:template>
 
 	<!--MAIN SHEET-->
-	<xsl:template match="*[1]" mode="main">
+	<xsl:template match="*[1]" mode="mainsheet">
 		<table class="row-border hover" id="{local-name(.)}">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
