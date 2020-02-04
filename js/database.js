@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //LOAD XML, this is the first action where every other action should wait for
     loadDocRE(datafile, xml).then(function (xmlDoc) {
 
-        var promiseTable = loadDocRE('xsl/linkedsheets.xsl');
+        var promiseTable = loadDocRE('xsl/database.xsl');
         var promiseHeader = loadDocRE('xsl/sheet-header.xsl');
         var promiseMenu = loadDocRE('xsl/sheet-menu.xsl');
 
@@ -52,11 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             targetElement = document.querySelector("section div#results");
 
+            //EXTRA for database version:
+
             transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
                 let sheet = document.querySelector("table").getAttribute("id");
                 any = makeDataTable(sheet);
                 //resolve([any, sheet]);
             })
+
+            //NOT NECESSARY for database version?
 
             // transformRE(xml, xslMenu, {}, document.querySelector("nav div#menu")).then(function (response) {
 
