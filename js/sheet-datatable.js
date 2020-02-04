@@ -41,7 +41,7 @@ function makeDataTable(tableid) {
             "scrollCollapse": true,
             "paging": false,
             "ordering": true,
-            "order-column": false,
+            "order-column": true,
             "order": [[0, 'asc'], [1, 'asc']],
             "fixedColumns": true,
             /* "dom": '<"top"i>ft', */

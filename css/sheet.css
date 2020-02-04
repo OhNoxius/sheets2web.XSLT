@@ -15,7 +15,7 @@ body {
 
 table tr td { 
     white-space:pre-line;
-    font-family: "Calibri", "Arial";
+    font-family: "Roboto", "Calibri", "Arial";
 }
 
 table tr th {
