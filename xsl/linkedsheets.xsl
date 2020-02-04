@@ -42,7 +42,7 @@
 		</p>
 	</xsl:template>
 
-	<xsl:template match="*[1]/*[1]/attribute::*" mode="keys2">
+	<!--<xsl:template match="*[1]/*[1]/attribute::*" mode="keys2">
 		<xsl:if test="/*[1]/*[local-name(.) = local-name(current())]">
 			<p>
 				<label for="{local-name(.)}">
@@ -54,7 +54,7 @@
 				</datalist>
 			</p>
 		</xsl:if>
-	</xsl:template>
+	</xsl:template>-->
 	<xsl:template match="*" mode="datalist">
 		<option value="{attribute::*[1]}" />
 	</xsl:template>
