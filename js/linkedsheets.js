@@ -4,7 +4,7 @@ var tables, navs;
 var xml, xslHeader, xslMenu, xslTable;
 var isEdge = (window.navigator.userAgent.indexOf("Edge") > -1);
 
-function detectEdge(){
+function detectEdge() {
     return (window.navigator.userAgent.indexOf("Edge") > -1)
 }
 
@@ -33,7 +33,7 @@ function transformSearch(inputfield) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    
+
     console.log(isEdge);
 
     //LOAD XML, this is the first action where every other action should wait for
@@ -52,39 +52,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
             targetElement = document.querySelector("section div#results");
 
-            transformRE(xml, xslTable, {}, targetElement);
-
-            transformRE(xml, xslMenu, {}, document.querySelector("nav div#menu")).then(function (response) {
-
-                //ADD EVENT LISTENERS to menu buttons
-                navs = document.getElementsByClassName("nav");
-                for (var i = 0; i < navs.length; i++) {
-                    navs[i].addEventListener('click', function () {
-                        targetElement.textContent = '';
-                        sheet = this.id;
-                        transformTable(this.id, '');
-                    }, false);
-                }
-                //alternatieve (betere?) methode
-                /* document.addEventListener('click', function(event) {
-                    if (event.target.matches('a.nav')) {
-                        console.log("`event.target` is", event.target);
-                        targetElement.textContent = '';
-                        transformTable(event.target.getAttribute("summary"), '');
-                    }
-                }, false); */
-                
-                //event listener click op inputfield
-                document.getElementById("search").addEventListener('click', function () {
-                    transformSearch(document.getElementById("searchinput").value);
-                }, false);
-                //event listener ENTER
-                document.getElementById("searchinput").addEventListener('keypress', function (e) {
-                    if (e.charCode === 13) transformSearch(document.getElementById("searchinput").value);
-                });
-            }, function (error) {
-                console.error("sheet-menu.xsl", error);
+            transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
+                let sheet = document.querySelector("table").getAttribute("id");
+                any = makeDataTable(sheet);
+                resolve([any, sheet]);
             })
+
+            // transformRE(xml, xslMenu, {}, document.querySelector("nav div#menu")).then(function (response) {
+
+            //     //ADD EVENT LISTENERS to menu buttons
+            //     navs = document.getElementsByClassName("nav");
+            //     for (var i = 0; i < navs.length; i++) {
+            //         navs[i].addEventListener('click', function () {
+            //             targetElement.textContent = '';
+            //             sheet = this.id;
+            //             transformTable(this.id, '');
+            //         }, false);
+            //     }
+            //     //alternatieve (betere?) methode
+            //     /* document.addEventListener('click', function(event) {
+            //         if (event.target.matches('a.nav')) {
+            //             console.log("`event.target` is", event.target);
+            //             targetElement.textContent = '';
+            //             transformTable(event.target.getAttribute("summary"), '');
+            //         }
+            //     }, false); */
+
+            //     //event listener click op inputfield
+            //     document.getElementById("search").addEventListener('click', function () {
+            //         transformSearch(document.getElementById("searchinput").value);
+            //     }, false);
+            //     //event listener ENTER
+            //     document.getElementById("searchinput").addEventListener('keypress', function (e) {
+            //         if (e.charCode === 13) transformSearch(document.getElementById("searchinput").value);
+            //     });
+            // }, function (error) {
+            //     console.error("sheet-menu.xsl", error);
+            // })
 
             //XSL TABLE
             //xslTable(sheet, '');

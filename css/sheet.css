@@ -5,14 +5,6 @@ html{
     /* background: #ceffe5 */    
 }
 
-body {
-    display: grid;
-    grid-template-columns: min-content auto;
-    grid-template-rows: minmax(50px, auto);
-    margin: 0px;
-    /* background: OldLace; */
-}
-
 table tr td { 
     white-space:pre-line;
     font-family: "Roboto", "Calibri", "Arial";

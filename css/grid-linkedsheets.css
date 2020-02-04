@@ -1,0 +1,8 @@
+
+body {
+    display: grid;
+    grid-template-columns: 0 auto;
+    grid-template-rows: minmax(50px, auto);
+    margin: 0px;
+    /* background: OldLace; */
+}
