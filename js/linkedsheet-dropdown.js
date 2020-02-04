@@ -16,11 +16,11 @@ function linkSheet(table, tableid) {
                 loadDocRE('xsl/linkedsheet.xsl').then(function (xslDoc) {
                     xslLinkedSheet = xslDoc;
 
-                    transformRE(xml, xslLinkedSheet, { thisFilter: tr.attr("summary"), category: tableid.substring(6, tableid.length) }).then(function (sessionresponse) {
-                        //console.log({sessionresponse});                    
+                    transformRE(xml, xslTable, { id: tr.attr("id") }).then(function (versions) {
+                        //console.log({versions});                    
                         //sessions = document.querySelector("div#dummy").innerHTML;
                         tr.addClass('loaded');
-                        row.child(sessionresponse, 'child').show();
+                        row.child(versions, 'child').show();
                         //makeSessionsDataTable(tr.next('tr').find('table.sessions'));
                     }, function (error) {
                         console.error("transformRE (sortAZ_sessions.xsl) transform error!", error);

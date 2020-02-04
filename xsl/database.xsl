@@ -3,11 +3,12 @@
 	<xsl:output method="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" encoding="UTF-8" />
 
 	<xsl:param name="input" />
+	<xsl:param name="id" />
 
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyzéèëêàçö'" />
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZEEEEACO'" />
 
-
+	<!-- CHOOSE MODE: main sheet OR find childnodes in linkedsheet -->
 	<xsl:template match="/">
 		<xsl:apply-templates select="*[1]" mode="heading" />
 	</xsl:template>
@@ -19,11 +20,19 @@
 				<xsl:value-of select="local-name(.)" />
 			</h1>
 		</a>-->
-		<xsl:apply-templates select="*" mode="keys" />
+		
 		<!--<xsl:apply-templates select="*[1]/*[1]/attribute::*" mode="keys2" />-->
 		<!--<xsl:value-of select="/*[1]/*[local-name(.) = local-name(current()/*[1]/*[1]/attribute::*)]" />-->
 		<!--<xsl:value-of select="*[1]/*[1]/attribute::*[local-name(.) = local-name(/*[1]/*)]" />-->
-		<xsl:apply-templates select="*[1]" mode="main" />
+		<xsl:choose>
+			<xsl:when test="$id">
+				<xsl:apply-templates select="*[starts-with(name(.), '_')]" mode="linkedsheet" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="*" mode="keys" />
+				<xsl:apply-templates select="*[1]" mode="main" />
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="*" mode="keys">
@@ -62,6 +71,18 @@
 		<xsl:value-of select="." />
 	</xsl:template>-->
 
+	<!-- LINKED SHEET -->
+	<xsl:template match="*" mode="linkedsheet">
+		<table class="linkedsheet hover">
+			<thead>
+				<xsl:apply-templates select="*[1]" mode="autoheader" />
+			</thead>
+			<tbody>
+				<xsl:apply-templates select="child::*[@concert = $id]" mode="autovalues" />
+			</tbody>
+		</table>
+	</xsl:template>
+
 	<!--MAIN SHEET-->
 	<xsl:template match="*[1]" mode="main">
 		<table class="row-border hover" id="{local-name(.)}">
@@ -74,6 +95,7 @@
 						<xsl:apply-templates select="child::*" mode="autovalues" />
 					</xsl:when>
 					<xsl:otherwise>
+						<!-- PERFORM SEARCH -->
 						<xsl:apply-templates select="child::*[@*[contains(translate(., $smallcase, $uppercase), translate($input, $smallcase, $uppercase))] or *[contains(translate(., $smallcase, $uppercase), translate($input, $smallcase, $uppercase))]]" mode="autovalues" />
 					</xsl:otherwise>
 				</xsl:choose>
@@ -161,7 +183,7 @@
 	<xsl:template match="child::*[1]" mode="details-control-values">
 		<td><!-- details --></td>
 	</xsl:template>
-	
+
 	<!-- AUTO OVERRIDE some common headers........................................................... -->
 	<xsl:template match="@id" mode="attributes-header">
 		<!--<xsl:attribute name="id">
