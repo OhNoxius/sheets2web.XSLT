@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
             transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
                 let sheet = document.querySelector("table").getAttribute("id");
                 any = makeDataTable(sheet);
-                resolve([any, sheet]);
+                //resolve([any, sheet]);
             })
 
             // transformRE(xml, xslMenu, {}, document.querySelector("nav div#menu")).then(function (response) {

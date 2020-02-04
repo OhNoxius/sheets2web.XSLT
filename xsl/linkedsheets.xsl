@@ -64,7 +64,7 @@
 
 	<!--MAIN SHEET-->
 	<xsl:template match="*[1]" mode="main">
-		<table class="row-border" id="{local-name(.)}">
+		<table class="row-border hover" id="{local-name(.)}">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>

@@ -110,6 +110,9 @@ function makeDataTable(tableid) {
             },
         });
 
+        /////NEW: link +sheet as a dropdown////////////
+        linkSheet(table, tableid);
+
         // Add event listener for opening and closing details
         $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
