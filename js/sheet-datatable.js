@@ -20,22 +20,6 @@ function makeDataTable(tableid) {
             return "<span class='uncertain'>" + cellval.slice(1, cellval.length) + "</span>"
         });
 
-        //format "; " so that each item comes on a newline?
-        //niet nodig als de white-space correct is in de <td>... momenteel gekozen voor =pre-line
-        /*  var cell, regex, res;
-        $('table#' + tableid + ' td:contains("\/")').html(function () {
-             regex = /\//gi;
-             cell = $(this).text();
-             res = cell.replace(regex, "\n");
-             return res;
-         });
-        $('table#' + tableid + ' td:contains("\r")').html(function() {
-            var regex = /\r/gi;
-            cell = $(this).text();
-            var res = cell.replace(regex, "\n");
-            return res;
-        }); */
-
         var table = $('table#' + tableid).DataTable({
             "scrollY": "calc(100vh - 50px - 2*36px - 20px)",
             "scrollCollapse": true,
@@ -86,9 +70,9 @@ function makeDataTable(tableid) {
             "language": {
                 "decimal": "",
                 "emptyTable": "",
-                "info": "_START_ᵉ tot _END_ᵉ resultaat van _TOTAL_ resultaten.",
+                "info": "_TOTAL_ results.",
                 "infoEmpty": "",
-                "infoFiltered": "(gefilterd uit _MAX_ resultaten)",
+                "infoFiltered": "(filtered from _MAX_ results)",
                 "infoPostFix": "",
                 "thousands": ",",
                 "lengthMenu": "Show _MENU_ entries",
@@ -96,7 +80,7 @@ function makeDataTable(tableid) {
                 "processing": "Processing...",
                 "search": tableid + ":",
                 /* "search": "Filter " + tableid + ":", */
-                "zeroRecords": "Niets gevonden...",
+                "zeroRecords": "Nothing found...",
                 "paginate": {
                     "first": "First",
                     "last": "Last",

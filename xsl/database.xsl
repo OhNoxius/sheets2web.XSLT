@@ -75,7 +75,7 @@
 
 	<!-- LINKED SHEET -->
 	<xsl:template match="*" mode="linkedsheet">
-		<table class="linkedsheet hover">
+		<table class="linkedsheet">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
@@ -154,7 +154,12 @@
 	</xsl:template>
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
-			<td>
+			<td><!-- onclick="tooltip(1,2)">-->
+				<xsl:attribute name="title">
+					<!--<xsl:value-of select="/*[1]/*[1]/*[1]/attribute::*[1]"/>-->
+					<!--<xsl:value-of select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*"/>-->
+					<xsl:apply-templates select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*" mode="hover"></xsl:apply-templates>
+				</xsl:attribute>
 				<xsl:value-of select="." />
 				<xsl:variable name="nextpos" select="position()+1" />
 				<xsl:if test="(starts-with(substring(name(./parent::*/@*[position()=$nextpos]), 2), '-'))">
@@ -210,6 +215,13 @@
 		<th class="date">
 			<xsl:value-of select="name(.)" />
 		</th>
+	</xsl:template>
+	
+	<xsl:template match="attribute::*" mode="hover">
+		<xsl:value-of select="local-name(.)"/>
+		<xsl:text>: </xsl:text>
+		<xsl:value-of select="."/>
+		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
 </xsl:stylesheet>

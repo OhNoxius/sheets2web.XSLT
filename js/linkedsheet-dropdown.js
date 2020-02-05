@@ -26,3 +26,7 @@ function linkSheet(table, tableid) {
         }
     });
 }
+
+function tooltip(sheet, id) {
+    alert("TIP");
+}
