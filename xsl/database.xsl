@@ -35,9 +35,11 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- INPUT FIELDS -->
 
 	<xsl:template match="*" mode="keys">
-		<p>
+		
 			<!--<xsl:value-of select="local-name()" />-->
 			<xsl:if test="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(.)]">
 				<label for="{local-name(.)}">
@@ -47,9 +49,8 @@
 				<datalist id="{local-name(.)}-list">
 					<xsl:apply-templates select="*" mode="datalist" />
 				</datalist>
-
 			</xsl:if>
-		</p>
+		
 	</xsl:template>
 
 	<!--<xsl:template match="*[1]/*[1]/attribute::*" mode="keys2">
@@ -109,7 +110,7 @@
 		<tr>
 			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
 
-			<xsl:apply-templates select="attribute::*" mode="attributes-header">
+			<xsl:apply-templates select="attribute::*[not(local-name() = $mainsheet)]" mode="attributes-header">
 				<xsl:sort select="position()" order="ascending" data-type="number" />
 			</xsl:apply-templates>
 
@@ -144,7 +145,7 @@
 		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 
-			<xsl:apply-templates select="attribute::*" mode="attributes-values">
+			<xsl:apply-templates select="attribute::*[not(local-name() = $mainsheet)]" mode="attributes-values">
 				<xsl:sort select="position()" order="ascending" data-type="number" />
 			</xsl:apply-templates>
 
@@ -193,6 +194,22 @@
 	</xsl:template>
 	<xsl:template match="@id" mode="attributes-values">
 		<!--<xsl:value-of select="." />-->
+	</xsl:template>
+	
+	<!-- AUTO OVERRIDE some common headers........................................................... -->
+	<xsl:template match="@id" mode="attributes-header">
+		<!--<xsl:attribute name="id">
+			<xsl:value-of select="." />
+		</xsl:attribute>-->
+	</xsl:template>
+	<xsl:template match="@id" mode="attributes-values">
+		<!--<xsl:value-of select="." />-->
+	</xsl:template>
+	
+	<xsl:template match="@DATUM | @Datum | @datum | @date | @rec_date" mode="attributes-header">
+		<th class="date">
+			<xsl:value-of select="name(.)" />
+		</th>
 	</xsl:template>
 
 </xsl:stylesheet>

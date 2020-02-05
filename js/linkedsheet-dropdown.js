@@ -10,12 +10,12 @@ function linkSheet(table, tableid) {
         else {
             if (!tr.hasClass('loaded')) {
                 //document.querySelector("div#dummy").textContent = '';
-                transformRE(xml, xslTable, { id: tr.attr("id") }).then(function (versions) {
-                    //console.log({versions});                    
+                transformRE(xml, xslTable, { id: tr.attr("id") }).then(function (linkedsheet) {
+                    //console.log({linkedsheet});                    
                     //sessions = document.querySelector("div#dummy").innerHTML;
                     tr.addClass('loaded');
-                    row.child(versions, 'child').show();
-                    //makeSessionsDataTable(tr.next('tr').find('table.sessions'));
+                    row.child(linkedsheet, 'child').show();
+                    makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"));
                 }, function (error) {
                     console.error("transformRE (xslTable) transform error!", error);
                 })

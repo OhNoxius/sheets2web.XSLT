@@ -63,7 +63,7 @@ function makeDataTable(tableid) {
             {
                 "targets": 'date',
                 "className": 'date',
-                "width": "7em",
+                "width": "calc(20px + 10ex)",
                 //"type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
             },
             {
