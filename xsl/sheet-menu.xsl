@@ -15,7 +15,7 @@
 
 	<!-- AUTO: generate menu buttons in the sidebar -->
 	<xsl:template match="child::*[1]/child::*">
-		<a class="nav target" href="#~{name(.)}" id="{name(.)}">
+		<a class="btn nav target" href="#~{name(.)}" id="{name(.)}">
 			<h2>
 				<xsl:value-of select="translate(name(.),'_', ' ')" />
 			</h2>

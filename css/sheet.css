@@ -5,12 +5,84 @@ html{
     /* background: #ceffe5 */    
 }
 
+/* FONT STYLES */
+h1{
+    display: block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: normal;
+    line-height: 20px;
+    color: black;
+}
+h2{
+    display: inline-block;
+    margin: 0.3em;
+    font-size: 1.2em;
+}
+h3 {
+    color: black;
+}
+h5 {
+    color: black;
+}
+.details {
+    font-size: 0.8em;
+    font-style: italic;
+    color: grey;
+}
+.inline, .descripion {
+    font-weight: normal;
+    color: grey;
+    padding-left: 5px;
+}
 table tr td { 
     white-space:pre-line;
     font-family: "Roboto", "Calibri", "Arial";
 }
 
-table tr th {
+/*BUTTONS*/
+.btn {
+    -webkit-border-radius: 2;
+    -moz-border-radius: 2;
+    border-radius: 0px 2px 2px 0px;
+    color: #ffffff;
+    font-size: 1.0em;
+    padding: 4px 4px 0px 4px;
+    margin: 0px 0px 0px 0px;
+    text-decoration: none;
+    border: 1px solid white;
+}
+.btn:hover {
+    -webkit-filter: brightness(70%);
+	-moz-filter: brightness(70%);
+	-o-filter: brightness(70%);
+	-ms-filter: brightness(70%);
+	filter: brightness(70%);
+}
+
+.btn:active {
+    -webkit-filter: brightness(70%);
+	-moz-filter: brightness(70%);
+	-o-filter: brightness(70%);
+	-ms-filter: brightness(70%);
+	filter: brightness(70%);
+}
+
+.btn:focus {
+    -webkit-filter: brightness(70%);
+	-moz-filter: brightness(70%);
+	-o-filter: brightness(70%);
+	-ms-filter: brightness(70%);
+	filter: brightness(70%);
+}
+
+/*SEARCH BUTTON*/
+.btn#search {
+    background:pink;
+}
+
+/* TABLE */
+table.mainsheet tr th {
     /* text-align: left; */
     background-color:lightblue;
     font-style: italic;
@@ -22,13 +94,14 @@ table tr td.detailsHeader {
     text-align: right;
 }
 
-table tr.detailsRow td {
-    background-color: lightgrey
-}
-
-table tr td.child {
+/* CHILD ROWS */
+table.mainsheet tbody td.child {
     padding: 0px 2px 0px 40px;
     background:#ededed;
+}
+
+table tr.detailsRow td {
+    background-color: lightgrey
 }
 
 table tr td.titlecolumn {
@@ -37,98 +110,6 @@ table tr td.titlecolumn {
 
 .dataTables_filter {
     float: left !important;
- }
-
-header {
-    grid-column: 1 / span 2;
-    grid-row-start: 1;
-}
-
-nav {
-    grid-row-start: 2;
-    grid-column-start: 1;
-    height: 100%;
-    float: right;
-    border-right: solid 1px grey;
-}
-
-section div#results {
-    grid-row-start: 2;
-    grid-column-start: 2;
-    height: 100%;
-}
-
-h1{
-    display: block;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: normal;
-    line-height: 20px;
-    color: black;
-}
-
-h2{
-    display: inline-block;
-    margin: 0.3em;
-    font-size: 1.2em;
-}
-
-h3 {
-    color: black;
-}
-
-h5 {
-    color: black;
-}
-
-.details {
-    font-size: 0.8em;
-    font-style: italic;
-    color: grey;
-}
-
-.inline, .descripion {
-    font-weight: normal;
-    color: grey;
-    padding-left: 5px;
-}
-
-.nav {
-    -webkit-border-radius: 2;
-    -moz-border-radius: 2;
-    border-radius: 0px 2px 2px 0px;
-    color: #ffffff;
-    font-size: 1.0em;
-    background: #f69c55;
-    padding: 4px 4px 0px 4px;
-    margin: 0px 0px 0px 0px;
-    text-decoration: none;
-    display: flex;
-    border: 1px solid white;
-}
-
-.nav:hover {
-    -webkit-filter: brightness(70%);
-	-moz-filter: brightness(70%);
-	-o-filter: brightness(70%);
-	-ms-filter: brightness(70%);
-	filter: brightness(70%);
-}
-
-.nav:active {
-    -webkit-filter: brightness(70%);
-	-moz-filter: brightness(70%);
-	-o-filter: brightness(70%);
-	-ms-filter: brightness(70%);
-	filter: brightness(70%);
-}
-
-.nav:focus {
-    -webkit-filter: brightness(70%);
-	-moz-filter: brightness(70%);
-	-o-filter: brightness(70%);
-	-ms-filter: brightness(70%);
-	filter: brightness(70%);
 }
 
 td.details-control {

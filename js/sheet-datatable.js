@@ -95,36 +95,37 @@ function makeDataTable(tableid) {
         });
 
         /////NEW: link +sheet as a dropdown////////////
-        linkSheet(table, tableid);
+        if (isDatabase) linkSheet(table, tableid);
+        else {
+            //Add event listener for opening and closing details
+            $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
 
-        // Add event listener for opening and closing details
-        $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
+                //select data (columns) that are hidden
+                cells = table.cells(row, '.noVis');
+                idx = table.cell(row, '.noVis').index().column;
 
-            //select data (columns) that are hidden
-            cells = table.cells(row, '.noVis');
-            idx = table.cell(row, '.noVis').index().column;
+                //format that data into a new table
+                var details = '<table class="detailInfo">';
+                for (var i = 0; i < cells.data().length; i++) {
+                    title = row.column(idx + i).header();
+                    if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
+                }
+                details = details + '</table>';
 
-            //format that data into a new table
-            var details = '<table class="detailInfo">';
-            for (var i = 0; i < cells.data().length; i++) {
-                title = row.column(idx + i).header();
-                if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
-            }
-            details = details + '</table>';
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                row.child(details, 'child').show();
-                tr.addClass('shown');
-            }
-        });
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child(details, 'child').show();
+                    tr.addClass('shown');
+                }
+            });
+        }
     }
     return table.data().any();
 }

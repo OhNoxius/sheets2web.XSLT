@@ -1,8 +1,16 @@
 
 body {
     display: grid;
-    grid-template-columns: 0 auto;
     grid-template-rows: minmax(50px, auto);
     margin: 0px;
     /* background: OldLace; */
+}
+
+header {
+    grid-row-start: 1;
+}
+
+section div#results {
+    grid-row-start: 2;
+    height: 100%;
 }

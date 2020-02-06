@@ -1,4 +1,4 @@
-var targetElement;
+var targetElement;// = document.querySelector("section div#results");
 var sheet;
 var tables, navs;
 var xml, xslHeader, xslMenu, xslTable;
@@ -34,30 +34,38 @@ function transformSearch(inputfield) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    console.log(isEdge);
+    targetElement = document.querySelector("section div#results");
+    console.log("Edge? ", isEdge);
 
     //LOAD XML, this is the first action where every other action should wait for
     loadDocRE(datafile, xml).then(function (xmlDoc) {
 
         var promiseTable = loadDocRE('xsl/database.xsl');
         var promiseHeader = loadDocRE('xsl/sheet-header.xsl');
-        var promiseMenu = loadDocRE('xsl/sheet-menu.xsl');
+        //var promiseMenu = loadDocRE('xsl/sheet-menu.xsl');
 
-        Promise.all([promiseHeader, promiseMenu, promiseTable]).then(function (xslDocs) {
+        Promise.all([promiseHeader, promiseTable]).then(function (xslDocs) {
 
-            xslHeader = xslDocs[0];
-            xslMenu = xslDocs[1];
-            xslTable = xslDocs[2];
             xml = xmlDoc;
+            xslHeader = xslDocs[0];
+            xslTable = xslDocs[1];
+            //xslMenu = xslDocs[2];           
 
-            targetElement = document.querySelector("section div#results");
+            //XSL HEADER
+            transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
+            lastUpdated(datafile, "updated");
 
             //EXTRA for database version:
 
             transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
-                let sheet = document.querySelector("table").getAttribute("id");
-                any = makeDataTable(sheet);
+                any = makeDataTable(document.querySelector("table").getAttribute("id"));
                 //resolve([any, sheet]);
+                document.querySelector("a.btn#search").addEventListener('click', function () {
+                    targetElement.textContent = '';
+                    transformRE(xml, xslTable, { edge: isEdge, input:"Chick Corea" }, targetElement).then(function (response) {
+                        any = makeDataTable(document.querySelector("table").getAttribute("id"));
+                    }, false);
+                }, false);
             })
 
             //NOT NECESSARY for database version?
@@ -96,10 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //XSL TABLE
             //xslTable(sheet, '');
-
-            //XSL HEADER
-            transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
-            lastUpdated(datafile, "updated");
 
             //GET REFRESH URL
             var url = window.location.href;

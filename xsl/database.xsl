@@ -21,7 +21,7 @@
 				<xsl:value-of select="local-name(.)" />
 			</h1>
 		</a>-->
-		
+
 		<!--<xsl:apply-templates select="*[1]/*[1]/attribute::*" mode="keys2" />-->
 		<!--<xsl:value-of select="/*[1]/*[local-name(.) = local-name(current()/*[1]/*[1]/attribute::*)]" />-->
 		<!--<xsl:value-of select="*[1]/*[1]/attribute::*[local-name(.) = local-name(/*[1]/*)]" />-->
@@ -31,26 +31,27 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="*" mode="keys" />
+				<a href="#" id="search" class="btn">search</a>
 				<xsl:apply-templates select="*[1]" mode="mainsheet" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- INPUT FIELDS -->
 
 	<xsl:template match="*" mode="keys">
-		
-			<!--<xsl:value-of select="local-name()" />-->
-			<xsl:if test="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(.)]">
-				<label for="{local-name(.)}">
-					<xsl:value-of select="local-name(.)" />
-				</label>
-				<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" />
-				<datalist id="{local-name(.)}-list">
-					<xsl:apply-templates select="*" mode="datalist" />
-				</datalist>
-			</xsl:if>
-		
+
+		<!--<xsl:value-of select="local-name()" />-->
+		<xsl:if test="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(.)]">
+			<label for="{local-name(.)}">
+				<xsl:value-of select="local-name(.)" />
+			</label>
+			<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" />
+			<datalist id="{local-name(.)}-list">
+				<xsl:apply-templates select="*" mode="datalist" />
+			</datalist>
+		</xsl:if>
+
 	</xsl:template>
 
 	<!--<xsl:template match="*[1]/*[1]/attribute::*" mode="keys2">
@@ -75,7 +76,7 @@
 
 	<!-- LINKED SHEET -->
 	<xsl:template match="*" mode="linkedsheet">
-		<table class="linkedsheet">
+		<table class="linkedsheet row-border">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
@@ -87,7 +88,7 @@
 
 	<!--MAIN SHEET-->
 	<xsl:template match="*[1]" mode="mainsheet">
-		<table class="row-border hover" id="{local-name(.)}">
+		<table class="mainsheet row-border hover" id="{local-name(.)}">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
@@ -155,11 +156,11 @@
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
 			<td><!-- onclick="tooltip(1,2)">-->
-				<xsl:attribute name="title">
-					<!--<xsl:value-of select="/*[1]/*[1]/*[1]/attribute::*[1]"/>-->
-					<!--<xsl:value-of select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*"/>-->
-					<xsl:apply-templates select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*" mode="hover"></xsl:apply-templates>
-				</xsl:attribute>
+				<xsl:if test="string(.) != ''"><!-- and local-name(.) != 'date'">-->
+					<xsl:attribute name="title">
+						<xsl:apply-templates select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*" mode="hover" />
+					</xsl:attribute>
+				</xsl:if>
 				<xsl:value-of select="." />
 				<xsl:variable name="nextpos" select="position()+1" />
 				<xsl:if test="(starts-with(substring(name(./parent::*/@*[position()=$nextpos]), 2), '-'))">
@@ -200,7 +201,7 @@
 	<xsl:template match="@id" mode="attributes-values">
 		<!--<xsl:value-of select="." />-->
 	</xsl:template>
-	
+
 	<!-- AUTO OVERRIDE some common headers........................................................... -->
 	<xsl:template match="@id" mode="attributes-header">
 		<!--<xsl:attribute name="id">
@@ -210,17 +211,17 @@
 	<xsl:template match="@id" mode="attributes-values">
 		<!--<xsl:value-of select="." />-->
 	</xsl:template>
-	
+
 	<xsl:template match="@DATUM | @Datum | @datum | @date | @rec_date" mode="attributes-header">
 		<th class="date">
 			<xsl:value-of select="name(.)" />
 		</th>
 	</xsl:template>
-	
+
 	<xsl:template match="attribute::*" mode="hover">
-		<xsl:value-of select="local-name(.)"/>
+		<xsl:value-of select="local-name(.)" />
 		<xsl:text>: </xsl:text>
-		<xsl:value-of select="."/>
+		<xsl:value-of select="." />
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 

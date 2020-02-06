@@ -5,3 +5,29 @@ body {
     margin: 0px;
     /* background: OldLace; */
 }
+
+header {
+    grid-column: 1 / span 2;
+    grid-row-start: 1;
+}
+
+nav {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    height: 100%;
+    float: right;
+    border-right: solid 1px grey;
+}
+
+section div#results {
+    grid-row-start: 2;
+    grid-column-start: 2;
+    height: 100%;
+}
+
+.nav {    
+    background: #f69c55;
+    display: flex;
+}
+
+
