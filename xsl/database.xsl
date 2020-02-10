@@ -152,10 +152,10 @@
 				</xsl:if>
 				<xsl:if test="(starts-with(substring(name(./parent::*/@*[position()=$nextpos]), 2), '+'))">
 					<xsl:if test="string-length(./parent::*/@*[position()=$nextpos])">
-						<span class="inline">
-							<xsl:text> </xsl:text>
+						<p class="details">
+							<!--<br/>-->
 							<xsl:value-of select="./parent::*/@*[position()=$nextpos]" />
-						</span>
+						</p>
 					</xsl:if>
 				</xsl:if>
 			</td>

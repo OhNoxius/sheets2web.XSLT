@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
             //xslMenu = xslDocs[2];          
 
             //XSL HEADER
-            transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
-            lastUpdated(datafile, "updated");
+            //transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
+            //lastUpdated(datafile, "updated");
 
             //XSL FILTERS
             transformRE(xml, xslFilters, {}, document.querySelector("header div#filters"));
