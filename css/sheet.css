@@ -161,3 +161,7 @@ div.dataTables_wrapper div.dataTables_info {
     float: right;
     text-align: left;
 }
+
+p.details#updated {
+    margin: 0;
+}

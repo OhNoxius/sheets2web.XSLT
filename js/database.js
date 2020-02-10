@@ -1,7 +1,8 @@
 var targetElement;// = document.querySelector("section div#results");
 var sheet;
 var tables, navs;
-var xml, xslHeader, xslMenu, xslTable;
+var xml, xslHeader, xslMenu, xslTable, xslFilters;
+var inputValues;
 var isEdge = (window.navigator.userAgent.indexOf("Edge") > -1);
 
 function detectEdge() {
@@ -42,18 +43,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var promiseTable = loadDocRE('xsl/database.xsl');
         var promiseHeader = loadDocRE('xsl/sheet-header.xsl');
+        var promiseFilters = loadDocRE('xsl/sheet-filters.xsl');
         //var promiseMenu = loadDocRE('xsl/sheet-menu.xsl');
 
-        Promise.all([promiseHeader, promiseTable]).then(function (xslDocs) {
+        Promise.all([promiseHeader, promiseTable, promiseFilters]).then(function (xslDocs) {
 
             xml = xmlDoc;
             xslHeader = xslDocs[0];
             xslTable = xslDocs[1];
-            //xslMenu = xslDocs[2];           
+            xslFilters = xslDocs[2]
+            //xslMenu = xslDocs[2];          
 
             //XSL HEADER
             transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
             lastUpdated(datafile, "updated");
+
+            //XSL FILTERS
+            transformRE(xml, xslFilters, {}, document.querySelector("header div#filters"));
 
             //EXTRA for database version:
 
@@ -61,8 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 any = makeDataTable(document.querySelector("table").getAttribute("id"));
                 //resolve([any, sheet]);
                 document.querySelector("a.btn#search").addEventListener('click', function () {
+                    inputValues = document.querySelector("input.searchfield").value;//.toUpperCase()
                     targetElement.textContent = '';
-                    transformRE(xml, xslTable, { edge: isEdge, input:"Chick Corea" }, targetElement).then(function (response) {
+                    
+                    transformRE(xml, xslTable, { edge: isEdge, input: inputValues }, targetElement).then(function (response) {
                         any = makeDataTable(document.querySelector("table").getAttribute("id"));
                     }, false);
                 }, false);

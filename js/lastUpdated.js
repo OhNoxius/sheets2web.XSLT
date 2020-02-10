@@ -22,6 +22,7 @@ function lastUpdated(datafile, id) {
         var date = new Date(response);
         var node = document.createElement("p");
         node.setAttribute("class", "details");
+        node.setAttribute("id", "updated");
         var textnode = document.createTextNode(datafile +" last updated on " + date.toLocaleDateString("nl-BE"));
         node.appendChild(textnode);
         document.getElementById(id).appendChild(node);

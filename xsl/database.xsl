@@ -22,56 +22,32 @@
 			</h1>
 		</a>-->
 
-		<!--<xsl:apply-templates select="*[1]/*[1]/attribute::*" mode="keys2" />-->
-		<!--<xsl:value-of select="/*[1]/*[local-name(.) = local-name(current()/*[1]/*[1]/attribute::*)]" />-->
-		<!--<xsl:value-of select="*[1]/*[1]/attribute::*[local-name(.) = local-name(/*[1]/*)]" />-->
 		<xsl:choose>
 			<xsl:when test="$id">
 				<xsl:apply-templates select="*[starts-with(name(.), '_')]" mode="linkedsheet" />
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="*" mode="keys" />
-				<a href="#" id="search" class="btn">search</a>
 				<xsl:apply-templates select="*[1]" mode="mainsheet" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<!-- INPUT FIELDS -->
-
-	<xsl:template match="*" mode="keys">
-
-		<!--<xsl:value-of select="local-name()" />-->
+	<!--<xsl:template match="*" mode="keys">
+		<!-\-<xsl:value-of select="local-name()" />-\->
 		<xsl:if test="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(.)]">
 			<label for="{local-name(.)}">
 				<xsl:value-of select="local-name(.)" />
 			</label>
-			<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" />
+			<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" class="searchfield" />
 			<datalist id="{local-name(.)}-list">
 				<xsl:apply-templates select="*" mode="datalist" />
 			</datalist>
 		</xsl:if>
-
 	</xsl:template>
 
-	<!--<xsl:template match="*[1]/*[1]/attribute::*" mode="keys2">
-		<xsl:if test="/*[1]/*[local-name(.) = local-name(current())]">
-			<p>
-				<label for="{local-name(.)}">
-					<xsl:value-of select="local-name(.)" />
-				</label>
-				<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" />
-				<datalist id="{local-name(.)}-list">
-					<xsl:apply-templates select="*" mode="datalist" />
-				</datalist>
-			</p>
-		</xsl:if>
-	</xsl:template>-->
 	<xsl:template match="*" mode="datalist">
 		<option value="{attribute::*[1]}" />
-	</xsl:template>
-	<!--<xsl:template match="/*[1]/*" mode="keymatch">
-		<xsl:value-of select="." />
 	</xsl:template>-->
 
 	<!-- LINKED SHEET -->
@@ -155,8 +131,10 @@
 	</xsl:template>
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
-			<td><!-- onclick="tooltip(1,2)">-->
-				<xsl:if test="string(.) != ''"><!-- and local-name(.) != 'date'">-->
+			<td>
+				<!-- onclick="tooltip(1,2)">-->
+				<xsl:if test="string(.) != ''">
+					<!-- and local-name(.) != 'date'">-->
 					<xsl:attribute name="title">
 						<xsl:apply-templates select="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]/attribute::*" mode="hover" />
 					</xsl:attribute>
