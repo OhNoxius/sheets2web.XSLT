@@ -63,6 +63,7 @@
 	<xsl:template match="*[1]" mode="autoheader">
 		<tr>
 			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
+			<!-- COUNT column -->
 			<th class="linkedinfo" />
 
 			<xsl:apply-templates select="attribute::*[not(local-name() = $mainsheet)]" mode="attributes-header">
@@ -91,6 +92,7 @@
 	<xsl:template match="child::*" mode="autovalues">
 		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
+			<!-- COUNT linked items -->
 			<td class="linkedinfo">
 				<xsl:value-of select="count(/*/_version/*[attribute::*[local-name(.) = $mainsheet] = current()/@id])" />
 			</td>
