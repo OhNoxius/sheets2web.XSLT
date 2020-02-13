@@ -2,13 +2,23 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" encoding="UTF-8" />
 
+	<!-- PARAMETERS -->
 	<xsl:param name="input" />
 	<xsl:param name="id" />
 
+	<!-- VARIABLES -->
 	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyzéèëêàçö'" />
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZEEEEACO'" />
 	<xsl:variable name="mainsheet" select="name(/*[1]/*[1])" />
-	<xsl:variable name="linkedsheet" select="name(/*[1]/*[starts-with(name(.), '_')])" />
+	<xsl:variable name="linkedsheetNode" select="/*[1]/*[starts-with(name(.), '_')]" />
+
+	<!-- KEYS -->
+	<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />
+	<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), string(attribute::*[local-name(.) = name(/*[1]/*[1])]))" />
+
+	<!-- ############# -->
+	<!-- ### START ### -->
+	<!-- ############# -->
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="*[1]" mode="heading" />
@@ -64,9 +74,11 @@
 		<tr>
 			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
 			<!-- COUNT column -->
-			<th class="linkedinfo" />
+			<th class="linkedinfo">
+				<xsl:value-of select="substring(local-name($linkedsheetNode), 2)" />
+			</th>
 
-			<xsl:apply-templates select="attribute::*[not(local-name() = $mainsheet)]" mode="attributes-header">
+			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet]" mode="attributes-header">
 				<xsl:sort select="position()" order="ascending" data-type="number" />
 			</xsl:apply-templates>
 
@@ -93,8 +105,23 @@
 		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 			<!-- COUNT linked items -->
-			<td class="linkedinfo">
-				<xsl:value-of select="count(/*/_version/*[attribute::*[local-name(.) = $mainsheet] = current()/@id])" />
+			<td class="linkedsheet">
+				<!--<xsl:value-of select="count(/*/_version/*[attribute::*[local-name(.) = $mainsheet] = current()/@id])" />-->
+				<!--<xsl:apply-templates select="linkedsheetNode[generate-id() = generate-id(key('linkedsheet-ids', string(current()/@id)))]"/>-->
+
+
+				<!--<xsl:value-of select="count(key('linkedsheet-ids', string(current()/@id)))" />	-->
+
+				<xsl:if test="key('linkedsheet-ids_Type', concat('A', string(current()/@id)))">
+					<!--<xsl:attribute name="class">A</xsl:attribute>-->
+					<xsl:text>A:</xsl:text>
+					<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('A', string(current()/@id))))" />
+				</xsl:if>
+				<xsl:if test="key('linkedsheet-ids_Type', concat('V', string(current()/@id)))">
+					<xsl:text>V:</xsl:text>
+					<!--<xsl:attribute name="class">V</xsl:attribute>-->
+					<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('V', string(current()/@id))))" />
+				</xsl:if>
 			</td>
 
 			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet]" mode="attributes-values">
