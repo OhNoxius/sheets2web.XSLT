@@ -9,11 +9,15 @@
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZEEEEACO'" />
 	<xsl:variable name="mainsheet" select="name(/*[1]/*[1])" />
 	
+	<xsl:key name="key1" match="/*[1]/*[1]/*[1]/attribute::*[local-name(.) = local-name(*[1]/*)]" use="."></xsl:key>
+	
 	<!-- CHOOSE MODE: main sheet OR find childnodes in linkedsheet -->
 	<xsl:template match="/">
+		<xsl:value-of select="/*[1]/*[1]/*[1]/attribute::*[local-name(.) = local-name(*[1]/*)][generate-id() = generate-id(key('key1', .)[1])]"/>
 		<xsl:apply-templates select="*[1]/*" mode="keys" />
 		<a href="#" id="search" class="btn">search</a>
 	</xsl:template>
+	
 	
 	<!-- INPUT FIELDS -->	
 	<xsl:template match="*" mode="keys">
