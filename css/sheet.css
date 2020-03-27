@@ -82,7 +82,7 @@ table tr td {
 }
 
 /* TABLE */
-table.mainsheet tr th {
+table tr th { /* table.mainsheet ??? */
     /* text-align: left; */
     background-color:lightblue;
     font-style: italic;
@@ -95,7 +95,7 @@ table tr td.detailsHeader {
 }
 
 /* CHILD ROWS */
-table.mainsheet tbody td.child {
+table tbody td.child {  /* table.mainsheet ??? */
     padding: 0px 2px 0px 40px;
     background:#ededed;
 }
