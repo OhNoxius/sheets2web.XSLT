@@ -1,7 +1,8 @@
 body {
     display: grid;
+    width: 100%;
     grid-template-columns: min-content auto;
-    grid-template-rows: minmax(50px, auto);
+    grid-template-rows: min-content auto;
     margin: 0px;
     /* background: OldLace; */
 }

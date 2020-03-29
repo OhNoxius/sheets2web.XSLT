@@ -157,8 +157,8 @@
 			<xsl:value-of select="name(.)"/>
 		</th>
 	</xsl:template>
-	<xsl:template match="@musicbrainz | @wikipedia | @link" mode="attributes-header">
-		<th class="url">
+	<xsl:template match="@musicbrainz | @wikipedia | @link | @url | @online | @web" mode="attributes-header">
+		<th class="urlCol">
 			<xsl:value-of select="name(.)"/>
 		</th>
 	</xsl:template>
@@ -179,7 +179,7 @@
 		</td>
 	</xsl:template>
 
-	<xsl:template match="@wikipedia" mode="attributes-values">
+	<!--<xsl:template match="@wikipedia" mode="attributes-values">
 		<td>
 			<xsl:choose>
 				<xsl:when test="string(.) = ''">
@@ -214,7 +214,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
-	</xsl:template>
+	</xsl:template>-->
 
 
 	<!-- HULP TEMPLATES -->
@@ -424,12 +424,12 @@
 	<!-- OVERRIDES previous code, watch out........................................................... -->
 
 	<xsl:template match="@jazzinbelgium" mode="attributes-header">
-		<th class="url">
+		<th class="urlCol">
 			<xsl:value-of select="name(.)"/>
 		</th>
 	</xsl:template>
 
-	<xsl:template match="@jazzinbelgium" mode="attributes-values">
+	<!--<xsl:template match="@jazzinbelgium" mode="attributes-values">
 		<td>
 			<xsl:choose>
 				<xsl:when test="string(.) = ''">
@@ -438,7 +438,7 @@
 							<xsl:text>https://www.jazzinbelgium.com/search/search_string=</xsl:text>
 							<xsl:value-of select="../@*[1]"/>
 						</xsl:attribute>
-						<xsl:text>jazzinbelgium</xsl:text>
+						<xsl:text>zoek</xsl:text>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
@@ -446,9 +446,9 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
-	</xsl:template>
+	</xsl:template>-->
 	<!-- NL WIKIPEDIA -->
-	<xsl:template match="@wikipedia" mode="attributes-values">
+	<!--<xsl:template match="@wikipedia" mode="attributes-values">
 		<td>
 			<xsl:choose>
 				<xsl:when test="string(.) = ''">
@@ -457,7 +457,7 @@
 							<xsl:text>https://nl.wikipedia.org/w/index.php?search=</xsl:text>
 							<xsl:value-of select="../@*[1]"/>
 						</xsl:attribute>
-						<xsl:text>search</xsl:text>
+						<xsl:text>zoek</xsl:text>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
@@ -465,6 +465,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
-	</xsl:template>
+	</xsl:template>-->
 
 </xsl:stylesheet>

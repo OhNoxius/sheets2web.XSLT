@@ -1,15 +1,26 @@
 function makeDataTable(tableid) {
+    let table;
     if (!$.fn.dataTable.isDataTable('table#' + tableid)) {
 
         //Format all the hyperlinks in <td> elements FIRST!so that column width is accordingly
-        var cellval, secondslash, thirdslash, shortURL;
+        let cellval, secondslash, thirdslash, shortURL;
+        // $('table#' + tableid + ' td:contains("http"), table#' + tableid + ' td:contains("www")').html(function () {
+        //     cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
+        //     secondslash = cellval.indexOf('/', cellval.indexOf('/') + 1);
+        //     thirdslash = cellval.indexOf('/', secondslash + 1);
+        //     if (cellval.slice(secondslash + 1, secondslash + 4) == 'www') shortURL = cellval.slice(secondslash + 5, thirdslash);
+        //     else shortURL = cellval.slice(secondslash + 1, thirdslash);
+        //     return "<a title='" + cellval + "' class='tableLink' href='" + $(this).text() + "' target='_blank'>" + shortURL + "</a>"
+        // });
+
+        //SLIM ALTERNATIEF, mr voorlopig nog volledig url weergave, en $ teken loopt mis
         $('table#' + tableid + ' td:contains("http"), table#' + tableid + ' td:contains("www")').html(function () {
-            cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
-            secondslash = cellval.indexOf('/', cellval.indexOf('/') + 1);
-            thirdslash = cellval.indexOf('/', secondslash + 1);
-            if (cellval.slice(secondslash + 1, secondslash + 4) == 'www') shortURL = cellval.slice(secondslash + 5, thirdslash);
-            else shortURL = cellval.slice(secondslash + 1, thirdslash);
-            return "<a class='tableLink' href='" + $(this).text() + "' target='_blank'>" + shortURL + "</a>"
+            let content = $(this).text();
+            let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
+            let element_content = content.replace(exp_match, "<a class='url' title='$1' href='$1'>$1</a>");
+            let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
+            let new_content = element_content.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
+            return new_content;
         });
 
         //search QUESTION MARKS       
@@ -20,21 +31,24 @@ function makeDataTable(tableid) {
             return "<span class='uncertain'>" + cellval.slice(1, cellval.length) + "</span>"
         });
 
-        var table = $('table#' + tableid).DataTable({
+        table = $('table#' + tableid).DataTable({
+            // responsive: true,
+            "autoWidth": true,
             "scrollY": "calc(100vh - 50px - 2*36px - 20px)",
             "scrollCollapse": true,
             "paging": false,
             "ordering": true,
             "order-column": true,
             "order": [[0, 'asc'], [1, 'asc']],
-            "fixedColumns": true,
+            // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
             "columnDefs": [{
                 "targets": 'details-control',
                 "className": 'details-control',
                 "orderable": false,
                 "data": null,
-                "defaultContent": ''
+                "defaultContent": '',
+                //"width": '1px' //padding + icon width... doet niks?
             },
             {
                 "targets": 'titlecolumn',
@@ -55,11 +69,18 @@ function makeDataTable(tableid) {
                 "data": 'collection'
             },
             {
-                "targets": 'url',
-                "className": 'url',
-                //"render": function ( data, type, row, meta ) {
-                //return '<a href="'+data+'">' + table.column(meta.column).header() + '</a>';
-                //},
+                "targets": 'urlCol',
+                "className": 'urlCol',
+                // "type": 'html',
+                // "width": "20",
+                // "render": function ( data, type, row ) {
+                //     return ;
+                // }
+                // "render": function (data, type, row, meta) {
+                //     let celltext = $(data).text();
+                //     //return '<a href="'+data+'">' + table.column(meta.col).header() + '</a>'; //werkt niet? zou column header moeten weergeven
+                //     return (data ? '<a class="tableLink" title="' + celltext + '" href="' + celltext + '">' + celltext.substr(0, 20) + 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</a>' : '<a href="' + data + '">search</a>');
+                // },
                 //"visible": false
             }],
             // "columns": [{
@@ -70,7 +91,7 @@ function makeDataTable(tableid) {
             "language": {
                 "decimal": "",
                 "emptyTable": "",
-                "info": "_TOTAL_ results.",
+                "info": "_TOTAL_ results",
                 "infoEmpty": "",
                 "infoFiltered": "(filtered from _MAX_ results)",
                 "infoPostFix": "",
@@ -99,20 +120,20 @@ function makeDataTable(tableid) {
         else {
             //Add event listener for opening and closing details
             $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
+                let tr = $(this).closest('tr');
+                let row = table.row(tr);
 
                 //select data (columns) that are hidden
                 cells = table.cells(row, '.noVis');
                 idx = table.cell(row, '.noVis').index().column;
 
                 //format that data into a new table
-                var details = '<table class="detailInfo">';
-                for (var i = 0; i < cells.data().length; i++) {
+                let title = "", details= "", detailsTable = "";
+                for (let i = 0; i < cells.data().length; i++) {
                     title = row.column(idx + i).header();
                     if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
                 }
-                details = details + '</table>';
+                detailsTable = '<table class="detailInfo">' + details + '</table>';
 
                 if (row.child.isShown()) {
                     // This row is already open - close it
