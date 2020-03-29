@@ -7,9 +7,9 @@ html{
 }
 
 body {
-    padding: 0;
-    white-space: break-word;/* white-space: pre-line; */
-    word-wrap: break-word;
+    /* padding: 0; */
+    /* white-space: break-word;/* white-space: pre-line;
+    word-wrap: break-word; */
     height: 100vh;
 }
 
@@ -52,7 +52,6 @@ table tr td {
 a.heading {
     text-decoration: none;
 }
-
 a.heading, a.heading:visited, a.heading:hover, a.heading:active {
     color: inherit;
 }
@@ -105,11 +104,10 @@ a.url {
     background:pink;
 }
 
-
 /* TABLE */
 table {
     table-layout: auto;
-    border-collapse:collapse;
+    border-collapse: collapse;
     font-size: 0.9em;
 }
 table tr th { /* table.mainsheet ??? */

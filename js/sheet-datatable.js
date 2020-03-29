@@ -17,7 +17,7 @@ function makeDataTable(tableid) {
         $('table#' + tableid + ' td:contains("http"), table#' + tableid + ' td:contains("www")').html(function () {
             let content = $(this).text();
             let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
-            let element_content = content.replace(exp_match, "<a class='url' title='$1' href='$1'>$1</a>");
+            let element_content = content.replace(exp_match, "<a class='url' target='_blank' title='$1' href='$1'>$1</a>");
             let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
             let new_content = element_content.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
             return new_content;
@@ -31,10 +31,18 @@ function makeDataTable(tableid) {
             return "<span class='uncertain'>" + cellval.slice(1, cellval.length) + "</span>"
         });
 
+        let noVis1 = $('table#' + tableid + ' th.noVis').index();
+        let noVis = [];
+        $('table#' + tableid + ' th.noVis').each(function () {
+            noVis.push($(this).index());
+        });
+        console.log(noVis);
+
+        let hasDetails;
         table = $('table#' + tableid).DataTable({
             // responsive: true,
             "autoWidth": true,
-            "scrollY": "calc(100vh - 50px - 2*36px - 20px)",
+            "scrollY": "calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
             "scrollCollapse": true,
             "paging": false,
             "ordering": true,
@@ -42,9 +50,28 @@ function makeDataTable(tableid) {
             "order": [[0, 'asc'], [1, 'asc']],
             // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
+            "createdRow": function (row, data, dataIndex) {
+                hasDetails = false;
+                for (let i = 0; i < noVis.length; i++) {
+                    if (data[noVis[i]]) {
+                        //$(row).addClass('important');
+                        //console.log(row.querySelector("td.details"));
+                        //console.log(data[noVis1]);
+                        hasDetails = true;
+                        break;
+                    }
+                }
+                if (hasDetails) $(row).find("td.details").addClass('details-control');
+            },
             "columnDefs": [{
                 "targets": 'details-control',
-                "className": 'details-control',
+                // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
+                //     if (true) {
+                //         //console.log(rowData);
+                //         //$(td).addClass('details-control');
+                //     }
+                // },
+                // "className": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '',
@@ -128,7 +155,7 @@ function makeDataTable(tableid) {
                 idx = table.cell(row, '.noVis').index().column;
 
                 //format that data into a new table
-                let title = "", details= "", detailsTable = "";
+                let title = "", details = "", detailsTable = "";
                 for (let i = 0; i < cells.data().length; i++) {
                     title = row.column(idx + i).header();
                     if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);

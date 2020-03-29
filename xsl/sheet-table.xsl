@@ -125,7 +125,7 @@
 		</td>
 	</xsl:template>
 	<xsl:template match="child::*[1]" mode="details-control-values">
-		<td><!-- details --></td>
+		<td class="details"><!-- details --></td> <!-- add class here to find cell later in DataTables. SHOULD BE DIFFERENT THAN COLUMN HEADER! -->
 	</xsl:template>
 
 	<!-- AUTO OVERRIDE some common headers........................................................... -->
@@ -157,7 +157,7 @@
 			<xsl:value-of select="name(.)"/>
 		</th>
 	</xsl:template>
-	<xsl:template match="@musicbrainz | @wikipedia | @link | @url | @online | @web" mode="attributes-header">
+	<xsl:template match="@musicbrainz | @wikipedia | @link | @url | @online | @web | @watch" mode="attributes-header">
 		<th class="urlCol">
 			<xsl:value-of select="name(.)"/>
 		</th>
