@@ -31,12 +31,12 @@ function makeDataTable(tableid) {
             return "<span class='uncertain'>" + cellval.slice(1, cellval.length) + "</span>"
         });
 
-        let noVis1 = $('table#' + tableid + ' th.noVis').index();
+        //let noVis1 = $('table#' + tableid + ' th.noVis').index();
         let noVis = [];
         $('table#' + tableid + ' th.noVis').each(function () {
             noVis.push($(this).index());
         });
-        console.log(noVis);
+        //console.log(noVis);
 
         let hasDetails;
         table = $('table#' + tableid).DataTable({
@@ -143,6 +143,9 @@ function makeDataTable(tableid) {
         });
 
         /////NEW: link +sheet as a dropdown////////////
+        if (typeof isDatabase == 'undefined') {
+            isDatabase = false;
+        }
         if (isDatabase) linkSheet(table, tableid);
         else {
             //Add event listener for opening and closing details
