@@ -36,6 +36,9 @@ function makeDataTable(tableid) {
         $('table#' + tableid + ' th.noVis').each(function () {
             noVis.push($(this).index());
         });
+        let orderColumns;
+        if (noVis.length) orderColumns = [[1, 'asc']];
+        else orderColumns = [[0, 'asc']];
         //console.log(noVis);
 
         let hasDetails;
@@ -47,10 +50,11 @@ function makeDataTable(tableid) {
             "paging": false,
             "ordering": true,
             "order-column": true,
-            "order": [[0, 'asc'], [1, 'asc']],
+            "order": orderColumns, //[[0, 'asc'], [1, 'asc']],
             // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
             "createdRow": function (row, data, dataIndex) {
+
                 if (!isDatabase) {
                     hasDetails = false;
                     for (let i = 0; i < noVis.length; i++) {
@@ -66,7 +70,7 @@ function makeDataTable(tableid) {
                 }
             },
             "columnDefs": [{
-                "targets": 'details',                
+                "targets": 'details',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '',
@@ -151,10 +155,47 @@ function makeDataTable(tableid) {
         });
 
         /////NEW: link +sheet as a dropdown////////////
-        if (typeof isDatabase == 'undefined') {
-            isDatabase = false;
+        if (typeof isDatabase == 'undefined') isDatabase = false;
+
+        if (isDatabase) {
+            linkSheet(table, tableid);
+            //append search box to column header
+            var ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
+            ths.forEach(
+                function (th, index, listObj) {
+                    if (sheetNames.includes(th.innerText)) {
+                        //console.log(th + ', ' + index + ', ' + this);
+                        th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>'+
+                        '<input list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="searchfield" />'+
+                        '<datalist id="' + th.innerText + '-list"></datalist>';
+                    }
+                },
+                'thisTh'
+            );
+            //console.log({title});
+            // $(title).html(title.innerText + ' <input type="text" class="filter" placeholder="" />');
+            //title.innerHTML = title.innerText + ' <input type="text" class="filter" placeholder="" />';
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+                $('input', this.header()).on('keyup change', function () { //on "select" of zoiets  + on keypress 
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                    // $(document).on('keypress',function(e) {
+                    //     if(e.which == 13) {
+                    //         alert('You pressed enter!');
+                    //     }
+                    // });
+                });
+            });
+            //klik op table header NIET MEER SORTEREN
+            $(ths).find('.filter').on('click', function (e) {
+                e.stopPropagation();
+            });
         }
-        if (isDatabase) linkSheet(table, tableid);
         else {
             //Add event listener for opening and closing details
             $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {

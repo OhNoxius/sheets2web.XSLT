@@ -59,41 +59,41 @@ document.addEventListener('DOMContentLoaded', function () {
             //lastUpdated(datafile, "updated");
 
             //XSL FILTERS
-            transformRE(xml, xslFilters, {}, document.querySelector("header div#filters")).then(function (response) {
-                //var size = Object.keys(keys).length;
-                //Object.entries(keys).sort((a, b) => b[0].localeCompare(a[0]));.
-                Object.keys(keys).forEach(function (keyName) {
-                    
-					//attrName = attrs[i].name;
-					dropdown = document.querySelector("header datalist#" + keyName + "-list");
-					console.log(dropdown);
+            if (isDatabase) {
+                transformRE(xml, xslFilters, {}, document.querySelector("header div#filters")).then(function (response) {
 
-					var fragment = document.createDocumentFragment();
+                    //Object.entries(keys).sort((a, b) => b[0].localeCompare(a[0]));
+                    // for (let [key, value] of Object.entries(object1)) {
+                    //     console.log(`${key}: ${value}`);
+                    //   }
+                    Object.keys(keys).forEach(function (keyName) {
+                        var fragment = document.createDocumentFragment();
 
-					keys[keyName].forEach(function (keyValue, index) {
-						var opt = document.createElement('option');
-						//opt.innerHTML = keyValue;
-						opt.value = keyValue;
-						fragment.appendChild(opt);
-					});
+                        keys[keyName].forEach(function (keyValue, index) {
+                            var opt = document.createElement('option');
+                            //opt.innerHTML = keyValue;
+                            opt.value = keyValue;
+                            fragment.appendChild(opt);
+                        });
 
-					dropdown.appendChild(fragment);
-				});
-            });
+                        document.querySelector("header datalist#" + keyName + "-list").appendChild(fragment);
+                    });
+                });
+            }
 
             //EXTRA for database version:
 
             transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
-                any = makeDataTable(document.querySelector("table").getAttribute("id"));
+                any = makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"));
                 //resolve([any, sheet]);
-                document.querySelector("a.btn#search").addEventListener('click', function () {
-                    inputValues = document.querySelector("input.searchfield").value;//.toUpperCase()
-                    targetElement.textContent = '';
-                    
-                    transformRE(xml, xslTable, { edge: isEdge, input: inputValues }, targetElement).then(function (response) {
-                        any = makeDataTable(document.querySelector("table").getAttribute("id"));
-                    }, false);
-                }, false);
+                // document.querySelector("a.btn#search").addEventListener('click', function () {
+                //     inputValues = document.querySelector("input.searchfield").value;//.toUpperCase()
+                //     targetElement.textContent = '';
+
+                //     transformRE(xml, xslTable, { edge: isEdge, input: inputValues }, targetElement).then(function (response) {
+                //         any = makeDataTable(document.querySelector("table").getAttribute("id"));
+                //     }, false);
+                // }, false);
             })
 
             //NOT NECESSARY for database version?
@@ -130,15 +130,17 @@ document.addEventListener('DOMContentLoaded', function () {
             //     console.error("sheet-menu.xsl", error);
             // })
 
+            // //GET REFRESH URL
+            // var url = window.location.href;
+            // if (url.indexOf("#") != -1) {
+            //     sheet = url.substring(url.indexOf("#~") + 2);
+            //     transformTable(sheet, '');
+            // }
+
             //XSL TABLE
             //xslTable(sheet, '');
 
-            //GET REFRESH URL
-            var url = window.location.href;
-            if (url.indexOf("#") != -1) {
-                sheet = url.substring(url.indexOf("#~") + 2);
-                transformTable(sheet, '');
-            }
+            
         })
     }, function (error) {
         console.error("data XML could not be loaded:", error);
