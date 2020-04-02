@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 
 	<script src="js/jQuery/jquery-3.4.0.min.js"></script>
-	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>	
+	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
 	<script src="js/helper functions/xslFunctions.js"></script>
 
@@ -26,8 +26,37 @@
 	<!-- <script src="js/timeline_render.js"></script> -->
 
 	<script>
-		var datafile = 'kc_roio.xml';
-		var isDatabase = true;
+		let datafile = 'kc_roio.xml';
+		let isDatabase = true;
+
+		let database, sheetNames, attrs;
+		let keyNames = [], keyValues = [];
+		let keys = {};
+
+		loadDocRE(datafile).then(function (xmlDoc) {
+			database = xmlDoc;
+			//let keyNames = database.querySelector("belgianjazzwiki muzikanten").children;
+			attrs = database.firstElementChild.firstElementChild.firstElementChild.attributes;
+			//console.log(database.firstElementChild.firstElementChild.children.);
+			let sheets = Array.from(database.firstElementChild.children);
+			let mainsheetNodes = Array.from(database.firstElementChild.firstElementChild.children);
+			sheetNames = sheets.map(x => x.tagName);
+			//console.log(sheetNames);
+			let attrName, dropdown;
+			for (let i = attrs.length - 1; i >= 0; i--) {
+				//console.log(attrs[i].name);
+				attrName = attrs[i].name;
+				if (sheetNames.includes(attrName)) {
+					//console.log(attrs[i].name);
+					keyNames.push(attrName);
+					//database.firstElementChild.firstElementChild.firstElementChild.getAttribute("class")
+					keyValues = mainsheetNodes.map(x => x.getAttribute(attrName))
+					keys[attrName] = [...new Set(keyValues)];
+
+				}
+				//output += attrs[i].name + "->" + attrs[i].value;
+			}
+		});
 	</script>
 </head>
 
@@ -38,7 +67,7 @@
 		<div id="filters"></div>
 	</header>
 	<nav>
-		<div id="menu"></div>		
+		<div id="menu"></div>
 	</nav>
 	<section>
 		<div id="results"></div>

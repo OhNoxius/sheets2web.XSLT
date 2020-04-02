@@ -9,27 +9,26 @@
 	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZEEEEACO'" />
 	<xsl:variable name="mainsheet" select="name(/*[1]/*[1])" />
 	
-	<xsl:key name="key1" match="/*[1]/*[1]/*[1]/attribute::*[local-name(.) = local-name(*[1]/*)]" use="."></xsl:key>
+	<xsl:key name="key1" match="/*[1]/*[1]/*[1]/attribute::*[local-name(.) = local-name(/*[1]/*)]" use="string(.)"></xsl:key>
 	
-	<!-- CHOOSE MODE: main sheet OR find childnodes in linkedsheet -->
 	<xsl:template match="/">
-		<xsl:value-of select="/*[1]/*[1]/*[1]/attribute::*[local-name(.) = local-name(*[1]/*)][generate-id() = generate-id(key('key1', .)[1])]"/>
-		<xsl:apply-templates select="*[1]/*" mode="keys" />
+		<xsl:value-of select="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(/*[1]/*)][generate-id() = generate-id(key('key1', string(current()))[1])]"/>
+		<xsl:apply-templates select="*[1]/*" mode="sheets" />
 		<a href="#" id="search" class="btn">search</a>
 	</xsl:template>
 	
 	
 	<!-- INPUT FIELDS -->	
-	<xsl:template match="*" mode="keys">
+	<xsl:template match="*" mode="sheets">
 		
-		<!--<xsl:value-of select="local-name()" />-->
+		<!-- TEST for every attribute (in the first child of the mainsheet) if there is a corresponding sheetname -->
 		<xsl:if test="/*[1]/*[1]/*[1]/attribute::*[local-name(current()) = local-name(.)]">
 			<label for="{local-name(.)}">
 				<xsl:value-of select="local-name(.)" />
 			</label>
 			<input list="{local-name(.)}-list" id="{local-name(.)}" name="{local-name(.)}" class="searchfield" />
 			<datalist id="{local-name(.)}-list">
-				<xsl:apply-templates select="*" mode="datalist" />
+				<!--<xsl:apply-templates select="*" mode="datalist" />-->
 			</datalist>
 		</xsl:if>
 		

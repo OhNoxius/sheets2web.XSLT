@@ -59,7 +59,27 @@ document.addEventListener('DOMContentLoaded', function () {
             //lastUpdated(datafile, "updated");
 
             //XSL FILTERS
-            transformRE(xml, xslFilters, {}, document.querySelector("header div#filters"));
+            transformRE(xml, xslFilters, {}, document.querySelector("header div#filters")).then(function (response) {
+                //var size = Object.keys(keys).length;
+                //Object.entries(keys).sort((a, b) => b[0].localeCompare(a[0]));.
+                Object.keys(keys).forEach(function (keyName) {
+                    
+					//attrName = attrs[i].name;
+					dropdown = document.querySelector("header datalist#" + keyName + "-list");
+					console.log(dropdown);
+
+					var fragment = document.createDocumentFragment();
+
+					keys[keyName].forEach(function (keyValue, index) {
+						var opt = document.createElement('option');
+						//opt.innerHTML = keyValue;
+						opt.value = keyValue;
+						fragment.appendChild(opt);
+					});
+
+					dropdown.appendChild(fragment);
+				});
+            });
 
             //EXTRA for database version:
 

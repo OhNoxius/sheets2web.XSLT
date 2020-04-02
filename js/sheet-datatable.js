@@ -51,19 +51,27 @@ function makeDataTable(tableid) {
             // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
             "createdRow": function (row, data, dataIndex) {
-                hasDetails = false;
-                for (let i = 0; i < noVis.length; i++) {
-                    if (data[noVis[i]]) {
-                        //$(row).addClass('important');
-                        //console.log(row.querySelector("td.details"));
-                        //console.log(data[noVis1]);
-                        hasDetails = true;
-                        break;
+                if (!isDatabase) {
+                    hasDetails = false;
+                    for (let i = 0; i < noVis.length; i++) {
+                        if (data[noVis[i]]) {
+                            //$(row).addClass('important');
+                            //console.log(row.querySelector("td.details"));
+                            //console.log(data[noVis1]);
+                            hasDetails = true;
+                            break;
+                        }
                     }
+                    if (hasDetails) $(row).find("td.details").addClass('details-control');
                 }
-                if (hasDetails) $(row).find("td.details").addClass('details-control');
             },
             "columnDefs": [{
+                "targets": 'details',                
+                "orderable": false,
+                "data": null,
+                "defaultContent": '',
+            },
+            {
                 "targets": 'details-control',
                 // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
                 //     if (true) {
@@ -71,7 +79,7 @@ function makeDataTable(tableid) {
                 //         //$(td).addClass('details-control');
                 //     }
                 // },
-                // "className": 'details-control',
+                "className": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '',

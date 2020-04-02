@@ -71,7 +71,7 @@
 		</th>
 	</xsl:template>
 	<xsl:template match="child::*[1]" mode="details-control-header">
-		<th class="details-control"><!-- details --></th>
+		<th class="details"><!-- details --></th> <!-- als hier "details-control" staat wordt er altijd een (+)je weergegeven -->
 	</xsl:template>
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
