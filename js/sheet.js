@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //xslTable(sheet, '');
 
             //XSL HEADER
-            transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
+            transformRE(xml, xslHeader, { title: headerTitle, edit: editLink}, document.querySelector("header div#heading"));
             lastUpdated(datafile, "updated");
 
             //GET REFRESH URL

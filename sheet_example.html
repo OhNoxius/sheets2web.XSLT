@@ -20,15 +20,12 @@
 	<script src="js/sheet-datatable.js"></script>
 	<script src="js/lastUpdated.js"></script>
 
-	<!-- NOG IMPLEMENTEREN:-->
-	<!-- <script src="js/timeline_render.js"></script> -->
-
 	<script>
-		var page = window.location.pathname.split("/").pop();
-		var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
-		//console.log(file);
-		//var datafile = 'sheet_example.xml';
-		var isDatabase = false;
+		let page = window.location.pathname.split("/").pop();
+		let datafile = page.slice(0, page.indexOf(".")).concat(".xml"); //uses .xml file with same filename
+		let isDatabase = false;
+		let headerTitle = "";
+		let editLink = ""; //paste Google Sheet link here
 	</script>
 </head>
 
