@@ -1,5 +1,6 @@
 function makeDataTable(tableid) {
     let table;
+    if (typeof isDatabase == 'undefined') isDatabase = false;
     if (!$.fn.dataTable.isDataTable('table#' + tableid)) {
 
         //Format all the hyperlinks in <td> elements FIRST!so that column width is accordingly
@@ -155,8 +156,6 @@ function makeDataTable(tableid) {
         });
 
         /////NEW: link +sheet as a dropdown////////////
-        if (typeof isDatabase == 'undefined') isDatabase = false;
-
         if (isDatabase) {
             linkSheet(table, tableid);
             //append search box to column header
