@@ -148,9 +148,13 @@ tr.shown td.details-control {
 }
 
 /* CHILD ROWS */
-table tbody td.child {  /* table.mainsheet ??? */
+table tr td.child {  /* table.mainsheet ??? */
     padding: 0px 2px 0px 40px;
     background:#ededed;
+}
+
+table.linkedsheet > thead tr th {
+    background-color: #e6d7ad;
 }
 
 table tr.detailsRow td {

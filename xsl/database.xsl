@@ -108,19 +108,20 @@
 			<td class="linkedsheet">
 				<!--<xsl:value-of select="count(/*/_version/*[attribute::*[local-name(.) = $mainsheet] = current()/@id])" />-->
 				<!--<xsl:apply-templates select="linkedsheetNode[generate-id() = generate-id(key('linkedsheet-ids', string(current()/@id)))]"/>-->
-
-
 				<!--<xsl:value-of select="count(key('linkedsheet-ids', string(current()/@id)))" />	-->
-
 				<xsl:if test="key('linkedsheet-ids_Type', concat('A', string(current()/@id)))">
 					<!--<xsl:attribute name="class">A</xsl:attribute>-->
-					<xsl:text>A:</xsl:text>
-					<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('A', string(current()/@id))))" />
+					<div>
+						<xsl:text>A:</xsl:text>
+						<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('A', string(current()/@id))))" />
+					</div>
 				</xsl:if>
 				<xsl:if test="key('linkedsheet-ids_Type', concat('V', string(current()/@id)))">
-					<xsl:text>V:</xsl:text>
-					<!--<xsl:attribute name="class">V</xsl:attribute>-->
-					<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('V', string(current()/@id))))" />
+					<div>
+						<xsl:text>V:</xsl:text>
+						<!--<xsl:attribute name="class">V</xsl:attribute>-->
+						<xsl:value-of select="count(key('linkedsheet-ids_Type', concat('V', string(current()/@id))))" />
+					</div>
 				</xsl:if>
 			</td>
 

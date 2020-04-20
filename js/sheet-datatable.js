@@ -191,7 +191,7 @@ function makeDataTable(tableid) {
                 });
             });
             //klik op table header NIET MEER SORTEREN
-            $(ths).find('.filter').on('click', function (e) {
+            $(ths).find('.searchfield').on('click', function (e) {
                 e.stopPropagation();
             });
         }
