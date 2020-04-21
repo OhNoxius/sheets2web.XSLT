@@ -84,16 +84,27 @@
 
 			<xsl:apply-templates select="child::*" mode="children-header" />
 		</tr>
+		<tr class="searchrow">
+			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
+			<!-- COUNT column -->
+			<th class="linkedinfo">
+				<xsl:value-of select="substring(local-name($linkedsheetNode), 2)" />
+			</th>
+			
+			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet]" mode="attributes-header">
+				<xsl:sort select="position()" order="ascending" data-type="number" />
+			</xsl:apply-templates>
+			
+			<xsl:apply-templates select="child::*" mode="children-header" />
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="attribute::*" mode="attributes-header" priority="0">
-		<xsl:variable name="nextpos" select="position()+1" />
+		<!--<xsl:variable name="nextpos" select="position()+1" />-->
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-')) and not(starts-with(substring(name(.), 2), '('))">
 			<th>
 				<xsl:if test="position() = 1">
-					<xsl:attribute name="class">
-						<xsl:text>titlecolumn</xsl:text>
-					</xsl:attribute>
+					<xsl:attribute name="class">titlecolumn</xsl:attribute>
 				</xsl:if>
 				<xsl:value-of select="name(.)" />
 			</th>
