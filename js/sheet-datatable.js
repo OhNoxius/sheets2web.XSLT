@@ -1,5 +1,5 @@
 function makeDataTable(tableid) {
-    let table;
+    let dTable;
     if (typeof isDatabase == 'undefined') isDatabase = false;
     if (!$.fn.dataTable.isDataTable('table#' + tableid)) {
 
@@ -32,23 +32,26 @@ function makeDataTable(tableid) {
             return "<span class='uncertain'>" + cellval.slice(1, cellval.length) + "</span>"
         });
 
-        //let noVis1 = $('table#' + tableid + ' th.noVis').index();
         let noVis = [];
-        $('table#' + tableid + ' th.noVis').each(function () {
-            noVis.push($(this).index());
-        });
+        $('table#' + tableid + ' th.noVis').each(function () { noVis.push($(this).index()); });
         let orderColumns;
         if (noVis.length) orderColumns = [[1, 'asc']];
         else orderColumns = [[0, 'asc']];
-        //console.log(noVis);
 
-        let linkedColumn = $('table#' + tableid + ' th.linkedinfo').index();
+        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        let scrollY = vh - 50 - (2 * 36) - 16; //100% viewheight - heading - (tableheader+searchbar) - tablefooter
 
-        let hasDetails;
-        table = $('table#' + tableid).DataTable({
+        if (isDatabase) {
+            scrollY -= 36;
+            if ($('table.mainsheet th.linkedinfo').index() > 0) orderColumns[0][0] += 1;
+        }
+
+        //INITIALIZE DATATABLE:
+        //---------------------
+        dTable = $('table#' + tableid).DataTable({
             // responsive: true,
             "autoWidth": true,
-            "scrollY": "calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
+            "scrollY": scrollY,//"calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
             "scrollCollapse": true,
             "paging": false,
             "ordering": true,
@@ -59,7 +62,7 @@ function makeDataTable(tableid) {
             "createdRow": function (row, data, dataIndex) {
 
                 if (!isDatabase) {
-                    hasDetails = false;
+                    let hasDetails = false;
                     for (let i = 0; i < noVis.length; i++) {
                         if (data[noVis[i]]) {
                             //$(row).addClass('important');
@@ -159,16 +162,24 @@ function makeDataTable(tableid) {
 
         /////NEW: link +sheet as a dropdown////////////
         if (isDatabase) {
-            linkSheet(table, tableid);
+            linkSheet(dTable, tableid);
             //append search box to column header
-            var ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
+            let ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
             ths.forEach(
                 function (th, index, listObj) {
                     if (sheetNames.includes(th.innerText)) {
-                        //console.log(th + ', ' + index + ', ' + this);
-                        th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>'+
-                        '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />'+
-                        '<datalist id="' + th.innerText + '-list"></datalist>';
+                        th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>' +
+                            '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
+                            '<datalist id="' + th.innerText + '-list"></datalist>';
+
+                        let fragment = document.createDocumentFragment();
+                        let opt;
+                        keys[th.innerText].forEach(function (keyValue, index) {
+                            opt = document.createElement('option');
+                            opt.value = keyValue;
+                            fragment.appendChild(opt);
+                        });
+                        th.querySelector("datalist").appendChild(fragment);
                     }
                 },
                 'thisTh'
@@ -177,7 +188,7 @@ function makeDataTable(tableid) {
             // $(title).html(title.innerText + ' <input type="text" class="filter" placeholder="" />');
             //title.innerHTML = title.innerText + ' <input type="text" class="filter" placeholder="" />';
             // Apply the search
-            table.columns().every(function () {
+            dTable.columns().every(function () {
                 var that = this;
                 $('input', this.header()).on('keyup change', function () { //on "select" of zoiets  + on keypress 
                     if (that.search() !== this.value) {
@@ -193,7 +204,7 @@ function makeDataTable(tableid) {
                 });
             });
             //klik op table header NIET MEER SORTEREN
-            $(ths).find('.searchfield').on('click', function (e) {
+            $(ths).find('.headersearch').on('click', function (e) {
                 e.stopPropagation();
             });
         }
@@ -201,11 +212,11 @@ function makeDataTable(tableid) {
             //Add event listener for opening and closing details
             $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
                 let tr = $(this).closest('tr');
-                let row = table.row(tr);
+                let row = dTable.row(tr);
 
                 //select data (columns) that are hidden
-                cells = table.cells(row, '.noVis');
-                idx = table.cell(row, '.noVis').index().column;
+                cells = dTable.cells(row, '.noVis');
+                idx = dTable.cell(row, '.noVis').index().column;
 
                 //format that data into a new table
                 let title = "", details = "", detailsTable = "";
@@ -228,7 +239,7 @@ function makeDataTable(tableid) {
             });
         }
     }
-    return table.data().any();
+    return dTable.data().any();
 }
 
 function format(h, d) {
