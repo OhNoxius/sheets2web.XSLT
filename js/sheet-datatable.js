@@ -42,6 +42,8 @@ function makeDataTable(tableid) {
         else orderColumns = [[0, 'asc']];
         //console.log(noVis);
 
+        let linkedColumn = $('table#' + tableid + ' th.linkedinfo').index();
+
         let hasDetails;
         table = $('table#' + tableid).DataTable({
             // responsive: true,
@@ -165,7 +167,7 @@ function makeDataTable(tableid) {
                     if (sheetNames.includes(th.innerText)) {
                         //console.log(th + ', ' + index + ', ' + this);
                         th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>'+
-                        '<input list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="searchfield" />'+
+                        '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />'+
                         '<datalist id="' + th.innerText + '-list"></datalist>';
                     }
                 },

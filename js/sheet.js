@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //XSL HEADER
             transformRE(xml, xslHeader, { title: headerTitle, edit: editLink}, document.querySelector("header div#heading"));
-            lastUpdated(datafile, "updated");
+            lastUpdated(datafile, "activity");
 
             //GET REFRESH URL
             var url = window.location.href;

@@ -24,7 +24,7 @@
 				</xsl:choose>
 			</a>
 			<xsl:if test="$edit">
-				<span class="details"> (<a href="{$edit}" id="linkEdit" class="link" target="_blank">bewerk...</a>)</span>
+				<span class="details"> (<a href="{$edit}" id="linkEdit" class="link" target="_blank">edit...</a>)</span>
 			</xsl:if>
 		</h1>
 

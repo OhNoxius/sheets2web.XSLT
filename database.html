@@ -1,42 +1,52 @@
+<!--<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<meta charset="UTF-8" />
-	<title>sheet2web</title>
+	<title>linkedsheets</title>
 	<meta name="sheets2web.XSLT" content="width=device-width, initial-scale=1.0" />
 
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
 	<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 	<link rel="stylesheet" href="css/sheet.css" />
-	<link rel="stylesheet" href="css/grid-sheet.css" />
+	<link rel="stylesheet" href="css/grid-linkedsheets.css" />
 
 	<script src="js/jQuery/jquery-3.4.0.min.js"></script>
 	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
 	<script src="js/helper functions/xslFunctions.js"></script>
 
-	<script src="js/sheet.js"></script>
+	<script src="js/linkedsheet-dropdown.js"></script>	
+	<script src="js/database.js"></script>
 	<script src="js/sheet-datatable.js"></script>
+	
 	<script src="js/lastUpdated.js"></script>
 
+	<!-- NOG IMPLEMENTEREN:-->
+	<script src="js/timeline_render.js"></script>
+
 	<script>
-		let isDatabase = false;
-		let page = window.location.pathname.split("/").pop();
-		let datafile = page.slice(0, page.indexOf(".")).concat(".xml"); //uses .xml file with same filename		
-		let headerTitle = "";
-		let editLink = ""; //paste Google Sheet link here
+		//var path = window.location.pathname;
+		var page = window.location.pathname.split("/").pop();
+		//var pageclean = page.slice(0, page.indexOf("."));		
+		//console.log( data );
+
+		//var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
+		var datafile = 'sheet_example.xml';
+		var isDatabase = true;
 	</script>
 </head>
 
 <body>
 	<header>
 		<div id="heading"></div>
+		<div id="activity"></div>
+		<div id="filters"></div>
 	</header>
 	<nav>
-		<div id="menu"></div>
-		<div id="activity"></div>
+		<div id="menu"></div>		
 	</nav>
 	<section>
 		<div id="results"></div>

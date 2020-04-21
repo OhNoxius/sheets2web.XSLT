@@ -52,34 +52,34 @@ document.addEventListener('DOMContentLoaded', function () {
             xslHeader = xslDocs[0];
             xslTable = xslDocs[1];
             xslFilters = xslDocs[2]
-            //xslMenu = xslDocs[2];          
+            //xslMenu = xslDocs[2];
 
             //XSL HEADER
-            //transformRE(xml, xslHeader, {}, document.querySelector("header div#heading"));
-            //lastUpdated(datafile, "updated");
+            transformRE(xml, xslHeader, { title: headerTitle, edit: editLink}, document.querySelector("header div#heading"));
+            lastUpdated(datafile, "activity");
 
-            //XSL FILTERS
-            if (isDatabase) {
-                transformRE(xml, xslFilters, {}, document.querySelector("header div#filters")).then(function (response) {
+            //XSL FILTERS //gebeurt nu in JS!
+            // if (isDatabase) {
+            //     transformRE(xml, xslFilters, {}, document.querySelector("header div#filters")).then(function (response) {
 
-                    //Object.entries(keys).sort((a, b) => b[0].localeCompare(a[0]));
-                    // for (let [key, value] of Object.entries(object1)) {
-                    //     console.log(`${key}: ${value}`);
-                    //   }
-                    Object.keys(keys).forEach(function (keyName) {
-                        var fragment = document.createDocumentFragment();
+            //         //Object.entries(keys).sort((a, b) => b[0].localeCompare(a[0]));
+            //         // for (let [key, value] of Object.entries(object1)) {
+            //         //     console.log(`${key}: ${value}`);
+            //         //   }
+            //         Object.keys(keys).forEach(function (keyName) {
+            //             var fragment = document.createDocumentFragment();
 
-                        keys[keyName].forEach(function (keyValue, index) {
-                            var opt = document.createElement('option');
-                            //opt.innerHTML = keyValue;
-                            opt.value = keyValue;
-                            fragment.appendChild(opt);
-                        });
+            //             keys[keyName].forEach(function (keyValue, index) {
+            //                 var opt = document.createElement('option');
+            //                 //opt.innerHTML = keyValue;
+            //                 opt.value = keyValue;
+            //                 fragment.appendChild(opt);
+            //             });
 
-                        document.querySelector("header datalist#" + keyName + "-list").appendChild(fragment);
-                    });
-                });
-            }
+            //             document.querySelector("header datalist#" + keyName + "-list").appendChild(fragment);
+            //         });
+            //     });
+            // }
 
             //EXTRA for database version:
 
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //XSL TABLE
             //xslTable(sheet, '');
 
-            
+
         })
     }, function (error) {
         console.error("data XML could not be loaded:", error);

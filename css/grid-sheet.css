@@ -31,4 +31,16 @@ section div#results {
     display: flex;
 }
 
+input[type="submit"] {
+    display: block;
+}
+
+input[type="search"] {
+    width: 10em;
+}
+
+.searchnav {
+    display: flex;
+}
+
 
