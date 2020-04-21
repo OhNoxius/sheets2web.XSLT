@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>linkedsheets</title>
+	<title>sheets database</title>
 	<meta name="sheets2web.XSLT" content="width=device-width, initial-scale=1.0" />
 
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
@@ -24,18 +24,15 @@
 	
 	<script src="js/lastUpdated.js"></script>
 
-	<!-- NOG IMPLEMENTEREN:-->
-	<script src="js/timeline_render.js"></script>
-
 	<script>
 		//var path = window.location.pathname;
 		var page = window.location.pathname.split("/").pop();
-		//var pageclean = page.slice(0, page.indexOf("."));		
-		//console.log( data );
-
-		//var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
-		var datafile = 'sheet_example.xml';
+		var pageclean = page.slice(0, page.indexOf("."));	
+		var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
+		//var datafile = 'sheet_example.xml';
 		var isDatabase = true;
+		let editLink;
+		let headerTitle;
 	</script>
 </head>
 

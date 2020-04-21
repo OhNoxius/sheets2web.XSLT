@@ -39,7 +39,7 @@ function makeDataTable(tableid) {
         else orderColumns = [[0, 'asc']];
 
         const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        let scrollY = vh - 50 - (2 * 36) - 16; //100% viewheight - heading - (tableheader+searchbar) - tablefooter
+        let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
 
         if (isDatabase) {
             scrollY -= 36;
@@ -50,6 +50,7 @@ function makeDataTable(tableid) {
         //---------------------
         dTable = $('table#' + tableid).DataTable({
             // responsive: true,
+            "orderCellsTop": true,
             "autoWidth": true,
             "scrollY": scrollY,//"calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
             "scrollCollapse": true,
@@ -60,7 +61,6 @@ function makeDataTable(tableid) {
             // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
             "createdRow": function (row, data, dataIndex) {
-
                 if (!isDatabase) {
                     let hasDetails = false;
                     for (let i = 0; i < noVis.length; i++) {
@@ -158,55 +158,95 @@ function makeDataTable(tableid) {
                     "sortDescending": ": activate to sort column descending"
                 }
             },
+            "initComplete": function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    let th = column.header();
+                    //if (sheetNames.includes(column.header().innerText)) {
+                    //var select = $('<select><option value=""></option></select>')
+                    if (th.classList.contains("details-control")) {
+                        $("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty();
+                    }
+                    else if (th.classList.contains("linkedinfo")) {
+                        $("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty();
+                        linkedSheetType.forEach(function (value, index, array) {
+                            let select = $('<input type="checkbox" id="' + th.innerText + '" name="' + th.innerText + '" class="headercheckbox" />' +
+                            '<label for="' + th.innerText + '">' + value + '</label>')
+                            .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
+                        })                        
+                    }
+                    else {
+                        let select = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
+                            '<datalist id="' + th.innerText + '-list"></datalist>')
+                            //.appendTo($(column.footer()).empty())
+                            .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
+                            .on('keyup change clear', function () {
+                                // var val = $.fn.dataTable.util.escapeRegex(
+                                //     $(this).val()
+                                // );
+                                // column
+                                //     .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
+                                //     .draw();
+                                if ( column.search() !== this.value ) {
+                                    column
+                                        .search( this.value )
+                                        .draw();
+                                }
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    }
+                    //}
+                });
+            }
         });
 
         /////NEW: link +sheet as a dropdown////////////
         if (isDatabase) {
             linkSheet(dTable, tableid);
-            //append search box to column header
-            let ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
-            ths.forEach(
-                function (th, index, listObj) {
-                    if (sheetNames.includes(th.innerText)) {
-                        th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>' +
-                            '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
-                            '<datalist id="' + th.innerText + '-list"></datalist>';
+            // // append search box to column header
+            // let ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
+            // ths.forEach(
+            //     function (th, index, listObj) {
+            //         if (sheetNames.includes(th.innerText)) {
+            //             th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>' + '<br/>' +
+            //                 '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
+            //                 '<datalist id="' + th.innerText + '-list"></datalist>';
 
-                        let fragment = document.createDocumentFragment();
-                        let opt;
-                        keys[th.innerText].forEach(function (keyValue, index) {
-                            opt = document.createElement('option');
-                            opt.value = keyValue;
-                            fragment.appendChild(opt);
-                        });
-                        th.querySelector("datalist").appendChild(fragment);
-                    }
-                },
-                'thisTh'
-            );
-            //console.log({title});
-            // $(title).html(title.innerText + ' <input type="text" class="filter" placeholder="" />');
-            //title.innerHTML = title.innerText + ' <input type="text" class="filter" placeholder="" />';
-            // Apply the search
-            dTable.columns().every(function () {
-                var that = this;
-                $('input', this.header()).on('keyup change', function () { //on "select" of zoiets  + on keypress 
-                    if (that.search() !== this.value) {
-                        that
-                            .search(this.value)
-                            .draw();
-                    }
-                    // $(document).on('keypress',function(e) {
-                    //     if(e.which == 13) {
-                    //         alert('You pressed enter!');
-                    //     }
-                    // });
-                });
-            });
-            //klik op table header NIET MEER SORTEREN
-            $(ths).find('.headersearch').on('click', function (e) {
-                e.stopPropagation();
-            });
+            //             let fragment = document.createDocumentFragment();
+            //             let opt;
+            //             keys[th.innerText].forEach(function (keyValue, index) {
+            //                 opt = document.createElement('option');
+            //                 opt.value = keyValue;
+            //                 fragment.appendChild(opt);
+            //             });
+            //             th.querySelector("datalist").appendChild(fragment);
+            //         }
+            //     },
+            //     'thisTh'
+            // );
+            // //Apply the search
+            // dTable.columns().every(function () {
+            //     var that = this;
+            //     $('input', this.header()).on('keyup change', function () { //on "select" of zoiets  + on keypress 
+            //         if (that.search() !== this.value) {
+            //             that
+            //                 .search(this.value)
+            //                 .draw();
+            //         }
+            //         // $(document).on('keypress',function(e) {
+            //         //     if(e.which == 13) {
+            //         //         alert('You pressed enter!');
+            //         //     }
+            //         // });
+            //     });
+            // });
+            // //klik op table header NIET MEER SORTEREN
+            // $(ths).find('.headersearch').on('click', function (e) {
+            //     e.stopPropagation();
+            // });
         }
         else {
             //Add event listener for opening and closing details

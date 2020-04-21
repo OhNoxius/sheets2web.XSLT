@@ -39,6 +39,8 @@
 		let keyNames = [], keyValues = [];
 		let keys = {};
 
+		let linkedSheetType = [];
+
 		loadDocRE(datafile).then(function (xmlDoc) {
 			database = xmlDoc;
 			//let keyNames = database.querySelector("belgianjazzwiki muzikanten").children;
@@ -61,6 +63,17 @@
 				}
 				//output += attrs[i].name + "->" + attrs[i].value;
 			}
+			for (let i = sheetNames.length - 1; i >= 0; i--) {
+				if (sheetNames[i].charAt(0) == '_') {
+					for (let t = sheets[i].childElementCount - 1; t >= 0; t--) {
+						linkedSheetType.push(sheets[i].children[t].getAttribute("type"));
+					}
+					break;
+				}
+			}
+			let linkedSheetSet = new Set(linkedSheetType);
+			linkedSheetSet.delete("");
+			linkedSheetType = [...linkedSheetSet];
 		});
 	</script>
 </head>

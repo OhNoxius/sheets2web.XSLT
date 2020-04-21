@@ -54,6 +54,7 @@
 		<table class="mainsheet row-border hover" id="{local-name(.)}">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
+				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
 			<tbody>
 				<xsl:choose>
@@ -66,11 +67,14 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</tbody>
+			<!--<tfoot>
+				<xsl:apply-templates select="*[last()]" mode="autoheader" />
+			</tfoot>-->
 		</table>
 	</xsl:template>
 
 	<!-- RUN THROUGHT ATTRIBUTES: make header -->
-	<xsl:template match="*[1]" mode="autoheader">
+	<xsl:template match="*" mode="autoheader">
 		<tr>
 			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
 			<!-- COUNT column -->
@@ -82,19 +86,6 @@
 				<xsl:sort select="position()" order="ascending" data-type="number" />
 			</xsl:apply-templates>
 
-			<xsl:apply-templates select="child::*" mode="children-header" />
-		</tr>
-		<tr class="searchrow">
-			<xsl:apply-templates select="child::*[1]" mode="details-control-header" />
-			<!-- COUNT column -->
-			<th class="linkedinfo">
-				<xsl:value-of select="substring(local-name($linkedsheetNode), 2)" />
-			</th>
-			
-			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet]" mode="attributes-header">
-				<xsl:sort select="position()" order="ascending" data-type="number" />
-			</xsl:apply-templates>
-			
 			<xsl:apply-templates select="child::*" mode="children-header" />
 		</tr>
 	</xsl:template>
@@ -194,10 +185,12 @@
 
 	<!-- FORMAT hover tooltip -->
 	<xsl:template match="attribute::*" mode="hover">
-		<xsl:value-of select="local-name(.)" />
-		<xsl:text>: </xsl:text>
-		<xsl:value-of select="." />
-		<xsl:text>&#10;</xsl:text>
+		<xsl:if test="string(.) != ''">
+			<xsl:value-of select="local-name(.)" />
+			<xsl:text>: </xsl:text>
+			<xsl:value-of select="." />
+			<xsl:text>&#10;</xsl:text>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- AUTO OVERRIDE some common headers........................................................... -->

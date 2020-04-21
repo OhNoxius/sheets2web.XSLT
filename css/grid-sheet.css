@@ -2,7 +2,7 @@ body {
     display: grid;
     width: 100%;
     grid-template-columns: 12% 88%;
-    grid-template-rows: 8% 92%;
+    grid-template-rows: 50px auto;
     margin: 0px;
     /* background: OldLace; */
 }

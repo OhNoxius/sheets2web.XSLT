@@ -83,7 +83,10 @@ th { /* table.mainsheet ??? */
     background-color:lightblue;
     font-style: italic;
     color: white;
-    padding: 10px 1px;
+}
+
+table.dataTable thead th {
+    padding: 8px 5px;
 }
 
 td.detailsHeader {

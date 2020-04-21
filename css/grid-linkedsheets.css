@@ -1,7 +1,7 @@
 
 body {
     display: grid;
-    grid-template-rows: minmax(50px, auto);
+    grid-template-rows: 50px auto;
     margin: 0px;
     /* background: OldLace; */
 }
@@ -10,11 +10,16 @@ header {
     grid-row-start: 1;
 }
 
+nav {
+    display: none;
+}
+
 section div#results {
     grid-row-start: 2;
     height: 100%;
 }
 
 input.headersearch {
-    width: 10em;
+    display:table-cell;
+    width:100%;
 }
