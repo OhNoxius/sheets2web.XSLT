@@ -7,7 +7,7 @@
 
 	<xsl:template match="/">
 		<div class="searchnav">
-			<input type="search" id="searchinput" name="searchinput" placeholder="zoek..." />
+			<input type="search" id="xslsearch" name="xslsearch" placeholder="zoek..." />
 			<input type="submit" id="search" value="→" />
 		</div>
 		<xsl:apply-templates select="child::*[1]/child::*" />

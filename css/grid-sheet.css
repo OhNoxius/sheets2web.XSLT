@@ -35,12 +35,10 @@ input[type="submit"] {
     display: block;
 }
 
-input[type="search"] {
+input#xslsearch {
     width: 10em;
 }
 
 .searchnav {
     display: flex;
 }
-
-
