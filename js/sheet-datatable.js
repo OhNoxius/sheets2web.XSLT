@@ -42,7 +42,7 @@ function makeDataTable(tableid) {
         let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
 
         if (isDatabase) {
-            scrollY -= 36;
+            scrollY -= 2 * 36;
             if ($('table.mainsheet th.linkedinfo').index() > 0) orderColumns[0][0] += 1;
         }
 
@@ -160,7 +160,7 @@ function makeDataTable(tableid) {
             },
             "initComplete": function () {
                 this.api().columns().every(function () {
-                    var column = this;
+                    let column = this;
                     let th = column.header();
                     //if (sheetNames.includes(column.header().innerText)) {
                     //var select = $('<select><option value=""></option></select>')
@@ -170,34 +170,50 @@ function makeDataTable(tableid) {
                     else if (th.classList.contains("linkedinfo")) {
                         $("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty();
                         linkedSheetType.forEach(function (value, index, array) {
-                            let select = $('<input type="checkbox" id="' + th.innerText + '" name="' + th.innerText + '" class="headercheckbox" />' +
-                            '<label for="' + th.innerText + '">' + value + '</label>')
-                            .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
-                        })                        
+                            $('<input type="checkbox" id="' + th.innerText + value + '" name="' + th.innerText + '" value="' + value + '" class="headercheckbox" />' +
+                                '<label for="' + th.innerText + value + '">' + value + '</label>')
+                                .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
+                        });
+                        $('input:checkbox').on('change', function () {
+                            //build a regex filter string with an or(|) condition
+                            let checkboxes = $('input:checkbox:checked').map(function () {
+                                return this.value;
+                            }).get().join('|');
+
+                            //filter in column 1, with an regex, no smart filtering, not case sensitive
+                            column.search(checkboxes, true, false, false).draw(false);
+
+                        });
                     }
                     else {
-                        let select = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
+                        let datalist = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
                             '<datalist id="' + th.innerText + '-list"></datalist>')
                             //.appendTo($(column.footer()).empty())
                             .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
-                            .on('keyup change clear', function () {
+                            .on('change', function () {
                                 // var val = $.fn.dataTable.util.escapeRegex(
                                 //     $(this).val()
                                 // );
                                 // column
                                 //     .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
                                 //     .draw();
-                                if ( column.search() !== this.value ) {
+                                if (column.search() !== this.value) {
                                     column
-                                        .search( this.value )
+                                        .search(this.value)
                                         .draw();
                                 }
                             });
 
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
+                        let ARR = column.data().unique().toArray();
+                        let LET = new Set(ARR.join('$').split('$'));
+
+                        //column.data().unique().sort().each(function (d, j) {
+                        LET.forEach(function(key, val) {
+                            datalist.append('<option value="' + val + '">' + val + '</option>')
                         });
                     }
+
+
                     //}
                 });
             }

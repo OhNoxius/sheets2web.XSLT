@@ -3,7 +3,7 @@
 	<xsl:output method="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" encoding="UTF-8" />
 
 	<xsl:strip-space elements="*" />
-	
+
 	<!-- PARAMETERS -->
 	<xsl:param name="input" />
 	<xsl:param name="id" />
