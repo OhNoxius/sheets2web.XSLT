@@ -10,8 +10,8 @@
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
 	<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
-	<link rel="stylesheet" href="css/sheet.css" />
 	<link rel="stylesheet" href="css/grid-linkedsheets.css" />
+	<link rel="stylesheet" href="css/sheet.css" />	
 
 	<script src="js/jQuery/jquery-3.4.0.min.js"></script>
 	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -34,49 +34,6 @@
 		let isDatabase = true;
 		let editLink = "https://docs.google.com/spreadsheets/d/1gTCRmbPqV-EL3g4KG7JdGnbVH5xIQvu0xcCTb7-JzKE/edit?usp=sharing";
 		let headerTitle = "KC ROIO"
-
-		let database, sheetNames, attrs;
-		let keyNames = [], keyValues = [];
-		let keys = {};
-
-		let linkedSheetType = [];
-
-		loadDocRE(datafile).then(function (xmlDoc) {
-			database = xmlDoc;
-			//let keyNames = database.querySelector("belgianjazzwiki muzikanten").children;
-			attrs = database.firstElementChild.firstElementChild.firstElementChild.attributes;
-			//console.log(database.firstElementChild.firstElementChild.children.);
-			let sheets = Array.from(database.firstElementChild.children);
-			let mainsheetNodes = Array.from(database.firstElementChild.firstElementChild.children);
-			sheetNames = sheets.map(x => x.tagName);
-			//console.log(sheetNames);
-			let attrName, dropdown;
-			for (let i = attrs.length - 1; i >= 0; i--) {
-				//console.log(attrs[i].name);
-				attrName = attrs[i].name;
-				if (sheetNames.includes(attrName)) {
-					//console.log(attrs[i].name);
-					keyNames.push(attrName);
-					//database.firstElementChild.firstElementChild.firstElementChild.getAttribute("class")
-					keyValues = mainsheetNodes.map(x => x.getAttribute(attrName))
-					keys[attrName] = [...new Set(keyValues)];
-				}
-				//output += attrs[i].name + "->" + attrs[i].value;
-			}
-			
-			//LINKEDSHEET type
-			for (let i = sheetNames.length - 1; i >= 0; i--) {
-				if (sheetNames[i].charAt(0) == '_') {
-					for (let t = sheets[i].childElementCount - 1; t >= 0; t--) {
-						linkedSheetType.push(sheets[i].children[t].getAttribute("type"));
-					}
-					break;
-				}
-			}
-			let linkedSheetSet = new Set(linkedSheetType);
-			linkedSheetSet.delete("");
-			linkedSheetType = [...linkedSheetSet];
-		});
 	</script>
 </head>
 

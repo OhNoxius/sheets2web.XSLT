@@ -18,21 +18,23 @@
 
 	<script src="js/helper functions/xslFunctions.js"></script>
 
-	<script src="js/linkedsheet-dropdown.js"></script>	
+	<script src="js/database-keys.js"></script>
+	<script src="js/linkedsheet-dropdown.js"></script>
 	<script src="js/database.js"></script>
 	<script src="js/sheet-datatable.js"></script>
-	
+
 	<script src="js/lastUpdated.js"></script>
 
 	<script>
 		//var path = window.location.pathname;
 		var page = window.location.pathname.split("/").pop();
-		var pageclean = page.slice(0, page.indexOf("."));	
+		var pageclean = page.slice(0, page.indexOf("."));
 		var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
 		//var datafile = 'sheet_example.xml';
 		var isDatabase = true;
 		let editLink;
 		let headerTitle;
+		databaseKeys(datafile);
 	</script>
 </head>
 
@@ -43,7 +45,7 @@
 		<div id="filters"></div>
 	</header>
 	<nav>
-		<div id="menu"></div>		
+		<div id="menu"></div>
 	</nav>
 	<section>
 		<div id="results"></div>

@@ -17,6 +17,7 @@
 	<!-- KEYS -->
 	<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />
 	<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), string(attribute::*[local-name(.) = name(/*[1]/*[1])]))" />
+	<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />
 
 	<!-- ############# -->
 	<!-- ### START ### -->
@@ -110,9 +111,7 @@
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 			<!-- COUNT linked items -->
 			<td class="linkedsheet">
-				<!--<xsl:value-of select="count(/*/_version/*[attribute::*[local-name(.) = $mainsheet] = current()/@id])" />-->
-				<!--<xsl:apply-templates select="linkedsheetNode[generate-id() = generate-id(key('linkedsheet-ids', string(current()/@id)))]"/>-->
-				<!--<xsl:value-of select="count(key('linkedsheet-ids', string(current()/@id)))" />	-->
+				<!--<xsl:apply-templates select="$linkedsheetNode/*/@type[generate-id(.) = generate-id(key('linkedsheet-types', string(.))[1])]" mode="types" />-->
 				<xsl:if test="key('linkedsheet-ids_Type', concat('A', string(current()/@id)))">
 					<!--<xsl:attribute name="class">A</xsl:attribute>-->
 					<div>
@@ -135,6 +134,9 @@
 
 			<xsl:apply-templates select="child::*" mode="children-values" />
 		</tr>
+	</xsl:template>
+	<xsl:template match="@type" mode="types">
+		<xsl:text>FLOEP</xsl:text>
 	</xsl:template>
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">

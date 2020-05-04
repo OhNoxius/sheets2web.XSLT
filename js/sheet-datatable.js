@@ -42,7 +42,7 @@ function makeDataTable(tableid) {
         let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
 
         if (isDatabase) {
-            scrollY -= 2 * 36;
+            scrollY -= 50; // - 2nd header
             if ($('table.mainsheet th.linkedinfo').index() > 0) orderColumns[0][0] += 1;
         }
 
@@ -159,6 +159,8 @@ function makeDataTable(tableid) {
                 }
             },
             "initComplete": function () {
+                //$('table#' + tableid + ' thead tr').clone(true).appendTo('#' + tableid + ' thead' );
+    
                 this.api().columns().every(function () {
                     let column = this;
                     let th = column.header();
@@ -185,10 +187,21 @@ function makeDataTable(tableid) {
 
                         });
                         //$(document).on('keypress',function(e) {
-                            //         //     if(e.which == 13) {
-                            //         //         alert('You pressed enter!');
-                            //         //     }
-                            //         // });
+                        //         //     if(e.which == 13) {
+                        //         //         alert('You pressed enter!');
+                        //         //     }
+                        //         // });
+                    }
+                    else if (th.classList.contains("date")) {
+                        $('<input type="search" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />')
+                            .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
+                            .on('input', function () {
+                                if (column.search() !== this.value) {
+                                    column
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
                     }
                     else {
                         let datalist = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
@@ -214,7 +227,7 @@ function makeDataTable(tableid) {
                         ARR = [...SET].sort();
 
                         //column.data().unique().sort().each(function (d, j) {
-                        ARR.forEach(function(val) {
+                        ARR.forEach(function (val) {
                             datalist.append('<option value="' + val + '">' + val + '</option>')
                         });
                     }
