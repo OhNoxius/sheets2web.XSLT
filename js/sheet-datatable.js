@@ -174,7 +174,7 @@ function makeDataTable(tableid) {
                                 '<label for="' + th.innerText + value + '">' + value + '</label>')
                                 .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
                         });
-                        $('input:checkbox').on('change', function () {
+                        $('input:checkbox').on('change', function (e) {
                             //build a regex filter string with an or(|) condition
                             let checkboxes = $('input:checkbox:checked').map(function () {
                                 return this.value;
@@ -184,13 +184,18 @@ function makeDataTable(tableid) {
                             column.search(checkboxes, true, false, false).draw(false);
 
                         });
+                        //$(document).on('keypress',function(e) {
+                            //         //     if(e.which == 13) {
+                            //         //         alert('You pressed enter!');
+                            //         //     }
+                            //         // });
                     }
                     else {
                         let datalist = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
                             '<datalist id="' + th.innerText + '-list"></datalist>')
                             //.appendTo($(column.footer()).empty())
                             .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
-                            .on('change', function () {
+                            .on('input', function () {
                                 // var val = $.fn.dataTable.util.escapeRegex(
                                 //     $(this).val()
                                 // );
@@ -205,10 +210,11 @@ function makeDataTable(tableid) {
                             });
 
                         let ARR = column.data().unique().toArray();
-                        let LET = new Set(ARR.join('$').split('$'));
+                        let SET = new Set(ARR.join('$').split('$'));
+                        ARR = [...SET].sort();
 
                         //column.data().unique().sort().each(function (d, j) {
-                        LET.forEach(function(key, val) {
+                        ARR.forEach(function(val) {
                             datalist.append('<option value="' + val + '">' + val + '</option>')
                         });
                     }
