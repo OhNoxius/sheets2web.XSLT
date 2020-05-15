@@ -160,7 +160,6 @@ function makeDataTable(tableid) {
             },
             "initComplete": function () {
                 //$('table#' + tableid + ' thead tr').clone(true).appendTo('#' + tableid + ' thead' );
-    
                 this.api().columns().every(function () {
                     let column = this;
                     let th = column.header();
@@ -181,10 +180,8 @@ function makeDataTable(tableid) {
                             let checkboxes = $('input:checkbox:checked').map(function () {
                                 return this.value;
                             }).get().join('|');
-
                             //filter in column 1, with an regex, no smart filtering, not case sensitive
                             column.search(checkboxes, true, false, false).draw(false);
-
                         });
                         //$(document).on('keypress',function(e) {
                         //         //     if(e.which == 13) {
@@ -225,94 +222,74 @@ function makeDataTable(tableid) {
                         let ARR = column.data().unique().toArray();
                         let SET = new Set(ARR.join('$').split('$'));
                         ARR = [...SET].sort();
-
                         //column.data().unique().sort().each(function (d, j) {
                         ARR.forEach(function (val) {
                             datalist.append('<option value="' + val + '">' + val + '</option>')
                         });
                     }
-
-
                     //}
                 });
             }
         });
 
         /////NEW: link +sheet as a dropdown////////////
-        if (isDatabase) {
-            linkSheet(dTable, tableid);
-            // // append search box to column header
-            // let ths = document.querySelector("table.dataTable").querySelectorAll("thead th");//$('table#' + tableid + ' thead th');
-            // ths.forEach(
-            //     function (th, index, listObj) {
-            //         if (sheetNames.includes(th.innerText)) {
-            //             th.innerHTML = '<label for="' + th.innerText + '">' + th.innerText + '</label>' + '<br/>' +
-            //                 '<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
-            //                 '<datalist id="' + th.innerText + '-list"></datalist>';
 
-            //             let fragment = document.createDocumentFragment();
-            //             let opt;
-            //             keys[th.innerText].forEach(function (keyValue, index) {
-            //                 opt = document.createElement('option');
-            //                 opt.value = keyValue;
-            //                 fragment.appendChild(opt);
-            //             });
-            //             th.querySelector("datalist").appendChild(fragment);
-            //         }
-            //     },
-            //     'thisTh'
-            // );
-            // //Apply the search
-            // dTable.columns().every(function () {
-            //     var that = this;
-            //     $('input', this.header()).on('keyup change', function () { //on "select" of zoiets  + on keypress 
-            //         if (that.search() !== this.value) {
-            //             that
-            //                 .search(this.value)
-            //                 .draw();
-            //         }
-            //         // $(document).on('keypress',function(e) {
-            //         //     if(e.which == 13) {
-            //         //         alert('You pressed enter!');
-            //         //     }
-            //         // });
-            //     });
-            // });
-            // //klik op table header NIET MEER SORTEREN
-            // $(ths).find('.headersearch').on('click', function (e) {
-            //     e.stopPropagation();
-            // });
-        }
-        else {
-            //Add event listener for opening and closing details
-            $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
-                let tr = $(this).closest('tr');
-                let row = dTable.row(tr);
+        //Add event listener for opening and closing details
+        $('table#' + tableid + ' tbody').on('click', 'td.details-control', function () {
+            let tr = $(this).closest('tr');
+            let row = dTable.row(tr);
 
-                //select data (columns) that are hidden
-                cells = dTable.cells(row, '.noVis');
-                idx = dTable.cell(row, '.noVis').index().column;
+            //select data (columns) that are hidden
+            cells = dTable.cells(row, '.noVis');
+            idx = dTable.cell(row, '.noVis').index().column;
 
-                //format that data into a new table
-                let title = "", details = "", detailsTable = "";
-                for (let i = 0; i < cells.data().length; i++) {
-                    title = row.column(idx + i).header();
-                    if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
+            //format that data into a new table
+            let title = "", details = "", detailsTable = "";
+            for (let i = 0; i < cells.data().length; i++) {
+                title = row.column(idx + i).header();
+                if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
+            }
+            detailsTable = '<table class="detailInfo">' + details + '</table>';
+
+            let childData = document.createElement('div');
+            let childFragment = new DocumentFragment;
+
+            let domParser = new DOMParser();
+            let detailsString = [
+                '<table class="detailInfo">', details, '</table>'
+            ].join('\n');
+            let detailsDOM = domParser.parseFromString(detailsString, 'text/html');
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                if (isDatabase) {
+                    if (!tr.hasClass('loaded')) {
+                        //document.querySelector("div#dummy").textContent = '';
+                        transformRE(xml, xslTable, { id: tr.attr("id") }).then(function (linkedsheet) {
+                            //sessions = document.querySelector("div#dummy").innerHTML;
+                            tr.addClass('loaded');
+                            
+                            childFragment.appendChild(detailsDOM.querySelector("table.detailInfo"));
+                            childFragment.appendChild(linkedsheet);
+                            childData.appendChild(childFragment);
+                            
+                            //linkedsheet.appendChild(detailsDOM.querySelector("table.detailInfo"));
+                            row.child(childData, 'child').show();
+                            makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"));
+                        }, function (error) {
+                            console.error("transformRE (xslTable) transform error!", error);
+                        })
+                    }
+                    else row.child.show(); //data is already present, just show it
                 }
-                detailsTable = '<table class="detailInfo">' + details + '</table>';
+            }
+        });
 
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    // Open this row
-                    row.child(details, 'child').show();
-                    tr.addClass('shown');
-                }
-            });
-        }
     }
     return dTable.data().any();
 }
