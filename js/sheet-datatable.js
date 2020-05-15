@@ -172,8 +172,8 @@ function makeDataTable(tableid) {
                     else if (th.classList.contains("linkedinfo")) {
                         $("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty();
                         linkedSheetType.forEach(function (value, index, array) {
-                            $('<input type="checkbox" id="' + th.innerText + value + '" name="' + th.innerText + '" value="' + value + '" class="headercheckbox" />' +
-                                '<label for="' + th.innerText + value + '">' + value + '</label>')
+                            $('<div class="nowrap"><input type="checkbox" id="' + th.innerText + value + '" name="' + th.innerText + '" value="' + value + '" class="headercheckbox" />' +
+                                '<label for="' + th.innerText + value + '">' + value + '</label></div>')
                                 .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
                         });
                         $('input:checkbox').on('change', function (e) {

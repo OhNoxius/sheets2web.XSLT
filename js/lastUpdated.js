@@ -30,3 +30,9 @@ function lastUpdated(datafile, id) {
         console.error("fetchHeader GET failed!", error);
     })
 }
+
+function getFilename() {    
+		let page = window.location.pathname.split("/").pop();
+		let pageclean = page.slice(0, page.indexOf("."));
+        return page.slice(0, page.indexOf(".")).concat(".xml");
+}

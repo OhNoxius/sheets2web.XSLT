@@ -15,7 +15,7 @@
 		<h1>
 			<a href="" class="heading">
 				<xsl:choose>
-					<xsl:when test="$title">
+					<xsl:when test="$title and not(string($title) = 'undefined')">
 						<xsl:value-of select="$title" />
 					</xsl:when>
 					<xsl:otherwise>

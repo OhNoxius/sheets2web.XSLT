@@ -18,12 +18,12 @@
 
 	<script src="js/helper functions/xslFunctions.js"></script>
 
-	<script src="js/lastUpdated.js"></script>
-
+	<script src="js/database-keys.js"></script>
 	<script src="js/linkedsheet-dropdown.js"></script>
-
 	<script src="js/database.js"></script>
 	<script src="js/sheet-datatable.js"></script>
+
+	<script src="js/lastUpdated.js"></script>
 
 
 	<!-- NOG IMPLEMENTEREN:-->
@@ -33,7 +33,13 @@
 		let datafile = 'kc_roio.xml';
 		let isDatabase = true;
 		let editLink = "https://docs.google.com/spreadsheets/d/1gTCRmbPqV-EL3g4KG7JdGnbVH5xIQvu0xcCTb7-JzKE/edit?usp=sharing";
-		let headerTitle = "KC ROIO"
+		let headerTitle = "KC ROIO";
+		let delimiter = "$";
+
+		//DON'T TOUCH			
+    	let keys = {};
+    	let linkedSheetType = [];
+		databaseKeys(datafile);
 	</script>
 </head>
 

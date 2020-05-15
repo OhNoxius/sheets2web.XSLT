@@ -26,15 +26,31 @@
 	<script src="js/lastUpdated.js"></script>
 
 	<script>
-		//var path = window.location.pathname;
-		var page = window.location.pathname.split("/").pop();
-		var pageclean = page.slice(0, page.indexOf("."));
-		var datafile = page.slice(0, page.indexOf(".")).concat(".xml");
-		//var datafile = 'sheet_example.xml';
+		//set source .xml filename
+		let datafile = getFilename();
+		//choose normal display (=false) or database mode (=true)
 		var isDatabase = true;
-		let editLink;
+		//set header title to display above table
 		let headerTitle;
+		//set drive link to display next to header title
+		let editLink;
+		//choose character that will be used to separate content inside cells
+		let delimiter = "$";
+
+		//DON'T TOUCH			
+		let keys = {};
+		let linkedSheetType = [];
+		let typesDOM = new DocumentFragment(); //document.createDocumentFragment();
 		databaseKeys(datafile);
+
+		let typesDoc;
+		let domParser = new DOMParser();
+		let typeString = [
+			'<type>', 'AUDIO', '<\/type>'
+		].join('\n');
+		typesDoc  = domParser.parseFromString(typeString, 'application/xml');
+		
+
 	</script>
 </head>
 

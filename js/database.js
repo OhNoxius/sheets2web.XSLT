@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //EXTRA for database version:
 
-            transformRE(xml, xslTable, { edge: isEdge }, targetElement).then(function (response) {
+            transformRE(xml, xslTable, { edge: isEdge, types: linkedSheetType.join() }, targetElement).then(function (response) {
                 any = makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"));
                 //resolve([any, sheet]);
                 // document.querySelector("a.btn#search").addEventListener('click', function () {

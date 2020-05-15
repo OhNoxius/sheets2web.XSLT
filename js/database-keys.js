@@ -1,9 +1,6 @@
 function databaseKeys(datafile) {
-    let database, sheetNames, attrs;
+    let database, sheetNames, attrs;    
     let keyNames = [], keyValues = [];
-    let keys = {};
-
-    let linkedSheetType = [];
 
     loadDocRE(datafile).then(function (xmlDoc) {
         database = xmlDoc;
@@ -40,5 +37,11 @@ function databaseKeys(datafile) {
         let linkedSheetSet = new Set(linkedSheetType);
         linkedSheetSet.delete("");
         linkedSheetType = [...linkedSheetSet];
+
+        linkedSheetType.forEach(function(e){
+			let type = document.createElement('type');
+			type.textContent = e;
+			typesDOM.appendChild(type);
+		})
     });
 }

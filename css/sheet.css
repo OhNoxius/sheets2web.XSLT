@@ -46,9 +46,8 @@ h5 {
     color: grey;
     padding-left: 5px;
 }
-table tr td {
-    /*white-space: pre-line;*/
-    word-wrap: break-word;
+.nowrap {
+    white-space: nowrap;
 }
 
 a.heading {
@@ -75,6 +74,10 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9em;
+}
+table tr td {
+    /*white-space: pre-line;*/
+    word-wrap: break-word;
 }
 th { /* table.mainsheet ??? */
     /* text-align: left; */
