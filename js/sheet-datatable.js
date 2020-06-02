@@ -224,7 +224,7 @@ function makeDataTable(tableid) {
                         ARR = [...SET].sort();
                         //column.data().unique().sort().each(function (d, j) {
                         ARR.forEach(function (val) {
-                            datalist.append('<option value="' + val + '">' + val + '</option>')
+                            datalist.append('<option value="' + val + '" />')
                         });
                     }
                     //}
