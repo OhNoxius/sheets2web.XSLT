@@ -44,7 +44,7 @@ function makeDataTable(tableid) {
 
         if (isDatabase) {
             scrollY = scrollY - 50 + 21; // - 2nd header + no search filter
-            tabledom = "tir";
+            tabledom = "tirf";
             document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) orderColumns[0][0] += 1;
         }
@@ -54,6 +54,7 @@ function makeDataTable(tableid) {
         dTable = $('table#' + tableid).DataTable({
             // responsive: true,
             "dom": tabledom,
+            "orderClasses": false,
             "processing": true,
             "orderCellsTop": true,
             "autoWidth": true,
@@ -168,6 +169,7 @@ function makeDataTable(tableid) {
                 this.api().columns().every(function () {
                     let column = this;
                     let th = column.header();
+                    let headerText = th.innerText;
                     //if (sheetNames.includes(column.header().innerText)) {
                     //var select = $('<select><option value=""></option></select>')
                     if (th.classList.contains("details-control")) {
@@ -197,7 +199,7 @@ function makeDataTable(tableid) {
                     else if (th.classList.contains("date")) {
                         $('<input type="search" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />')
                             .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
-                            .on('input', function () {
+                            .on('change', function () {
                                 if (column.search() !== this.value) {
                                     column
                                         .search(this.value)
@@ -206,34 +208,40 @@ function makeDataTable(tableid) {
                             });
                     }
                     else {
-                        let datalist = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />' +
-                            '<datalist id="' + th.innerText + '-list"></datalist>')
+                        let input = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '-input" name="' + th.innerText + '" class="headersearch" />'
+                        )//+ '<datalist id="' + th.innerText + '-list"></datalist>')
                             //.appendTo($(column.footer()).empty())
                             .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
-                            .on('change', function () {
-                                //option1
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val()
-                                );
-                                //event.stopPropagation;
-                               
-                                column
-                                    .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
-                                    .draw('page');
-                                //option 2
-                                // if (column.search() !== this.value) {
-                                //     column
-                                //         .search(this.value)
-                                //         .draw('page');
-                                // }
+                            .on('change select', function () {
+                                if (column.search() !== this.value) {
+                                    column
+                                        .search(this.value)
+                                        .draw('page');
+                                }
                             });
+
+                        //let datalist = $('<datalist id="' + headerText + '-list"></datalist>').appendTo("table.mainsheet thead tr:eq(1) th").eq(column.index());
 
                         let ARR = column.data().unique().toArray();
                         let SET = new Set(ARR.join('$').split('$'));
-                        ARR = [...SET].sort();
+                        //ARR = [...SET].sort();
                         //column.data().unique().sort().each(function (d, j) {
-                        ARR.forEach(function (val) {
-                            datalist.append('<option value="' + val + '" />')
+                        // ARR.forEach(function (val) {
+                        //     datalist.append('<option value="' + val + '" />')
+                        // });
+                       
+                        $(function () {
+                            var ARR = [...SET].sort();
+                            $(input).autocomplete({
+                                source: ARR,
+                                select: function(event, ui){
+                                    if (column.search() !== ui.item.value) {
+                                        column
+                                            .search(ui.item.value)
+                                            .draw('page');
+                                    }
+                                }
+                            });
                         });
                     }
                     //}
@@ -260,12 +268,16 @@ function makeDataTable(tableid) {
 
         $(document).on("processing.dt", function (e, settings, processing) {
             if (processing) {
-                dTable.processing(true);
-                setTimeout(function () {
-                    dTable.processing(false);
-                }, 2000);
+                console.log("event trigger: processing true");
+                // dTable.processing(true);
+                // setTimeout(function () {
+                //     dTable.processing(false);
+                // }, 2000);
             }
-            else dTable.processing(false);
+            else {
+                console.log("event trigger: processing false");
+                //dTable.processing(false);
+            }
         });
 
         /////NEW: link +sheet as a dropdown////////////
