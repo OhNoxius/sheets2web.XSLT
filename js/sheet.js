@@ -3,6 +3,7 @@ var sheet;
 var tables, navs;
 var xml, xslHeader, xslMenu, xslTable;
 var isEdge = (window.navigator.userAgent.indexOf("Edge") > -1);
+let searchbar, searchbutton;
 
 function detectEdge(){
     return (window.navigator.userAgent.indexOf("Edge") > -1)
@@ -33,6 +34,7 @@ function transformSearch(inputfield) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    
     
     console.log(isEdge);
 
@@ -72,13 +74,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }, false); */
                 
+                searchbar = document.getElementById("xslsearch");
+                searchbutton = document.getElementById("search");
                 //event listener click op inputfield
-                document.getElementById("search").addEventListener('click', function () {
-                    transformSearch(document.getElementById("searchinput").value);
+                searchbutton.addEventListener('click', function () {
+                    transformSearch(searchbutton.value);
                 }, false);
-                //event listener ENTER
-                document.getElementById("searchinput").addEventListener('keypress', function (e) {
-                    if (e.charCode === 13) transformSearch(document.getElementById("searchinput").value);
+                //event listener 
+                
+                searchbar.addEventListener('keypress', function (e) {
+                    if (e.charCode === 13) transformSearch(searchbar.value);
                 });
             }, function (error) {
                 console.error("sheet-menu.xsl", error);

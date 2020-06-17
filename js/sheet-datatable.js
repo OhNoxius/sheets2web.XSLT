@@ -40,9 +40,12 @@ function makeDataTable(tableid) {
 
         const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
+        let tabledom = "ftir";
 
         if (isDatabase) {
-            scrollY -= 50; // - 2nd header
+            scrollY = scrollY - 50 + 21; // - 2nd header + no search filter
+            tabledom = "tir";
+            document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) orderColumns[0][0] += 1;
         }
 
@@ -50,6 +53,7 @@ function makeDataTable(tableid) {
         //---------------------
         dTable = $('table#' + tableid).DataTable({
             // responsive: true,
+            "dom": tabledom,
             "orderCellsTop": true,
             "autoWidth": true,
             "scrollY": scrollY,//"calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
@@ -212,11 +216,11 @@ function makeDataTable(tableid) {
                                 // column
                                 //     .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
                                 //     .draw();
-                                if (column.search() !== this.value) {
-                                    column
-                                        .search(this.value)
-                                        .draw();
-                                }
+                                // if (column.search() !== this.value) {
+                                //     column
+                                //         .search(this.value)
+                                //         .draw();
+                                // }
                             });
 
                         let ARR = column.data().unique().toArray();
@@ -267,25 +271,33 @@ function makeDataTable(tableid) {
             }
             else {
                 // Open this row
-                if (isDatabase) {
-                    if (!tr.hasClass('loaded')) {
-                        //document.querySelector("div#dummy").textContent = '';
+                tr.addClass('shown');
+                if (!tr.hasClass('loaded')) {
+                    if (isDatabase) {
                         transformRE(xml, xslTable, { id: tr.attr("id") }).then(function (linkedsheet) {
                             //sessions = document.querySelector("div#dummy").innerHTML;
                             tr.addClass('loaded');
-                            
+
                             childFragment.appendChild(detailsDOM.querySelector("table.detailInfo"));
                             childFragment.appendChild(linkedsheet);
                             childData.appendChild(childFragment);
-                            
+
                             //linkedsheet.appendChild(detailsDOM.querySelector("table.detailInfo"));
                             row.child(childData, 'child').show();
+                            
                             makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"));
                         }, function (error) {
                             console.error("transformRE (xslTable) transform error!", error);
                         })
                     }
-                    else row.child.show(); //data is already present, just show it
+                    else {
+                        childFragment.appendChild(detailsDOM.querySelector("table.detailInfo"));
+                        childData.appendChild(childFragment);
+                        row.child(childData, 'child').show();
+                    }
+                }
+                else {
+                    row.child.show(); //data is already present, just show it
                 }
             }
         });

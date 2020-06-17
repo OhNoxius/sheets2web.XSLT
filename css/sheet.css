@@ -19,7 +19,7 @@ h1{
     display: block;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-weight: normal;
+    /* font-weight: normal; */
     line-height: 20px;
     color: black;
 }
@@ -70,11 +70,29 @@ a.url {
 
 /* TABLE */
 table {
+    border-collapse: collapse;
+}
+table.sheet {
     table-layout: auto;
     width: 100%;
-    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+table.detailsInfo {
+    /* table-layout: auto; */
     font-size: 0.9em;
 }
+table.linkedsheet {
+    width: 100%;
+    font-size: 0.9em;
+    border: 1px solid lightgrey;
+}
+table.linkedsheet.display tbody tr table tr:hover {
+    background: none;
+}
+table.linkedsheet tbody tr {
+    background-color: lightgoldenrodyellow;
+}
+
 table tr td {
     /*white-space: pre-line;*/
     word-wrap: break-word;
@@ -84,6 +102,10 @@ th { /* table.mainsheet ??? */
     background-color:lightblue;
     font-style: italic;
     color: white;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    background-color: lightblue;
 }
 
 table.dataTable thead th {
@@ -124,17 +146,20 @@ tr.shown td.details-control {
 }
 
 /* CHILD ROWS */
-table.mainsheet.dataTable tbody tr td.child {  /* table.mainsheet ??? */
-    padding: 0px 2px 0px 40px;
-    background: #ededed;
+table.mainsheet > tbody tr td.child, table.sheet > tbody tr td.child {  /* table.mainsheet ??? */
+    padding: 0px 2px 4px 20px;
+    background-color: #ededed;
 }
 
 table.linkedsheet > thead tr th {
     background-color: #e6d7ad;
 }
+table.linkedsheet > tbody tr {
+    background-color: #fffefa;
+}
 
 tr.detailsRow td {
-    background-color: lightgrey
+    background-color: #dae3e8;
 }
 
 td.titlecolumn {
