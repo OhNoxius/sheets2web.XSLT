@@ -54,6 +54,7 @@ function makeDataTable(tableid) {
         dTable = $('table#' + tableid).DataTable({
             // responsive: true,
             "dom": tabledom,
+            "processing": true,
             "orderCellsTop": true,
             "autoWidth": true,
             "scrollY": scrollY,//"calc(100vh - 50px - 2*36px - 16px)", //100% viewheight - heading - (tableheader+searchbar) - tablefooter
@@ -146,8 +147,8 @@ function makeDataTable(tableid) {
                 "infoPostFix": "",
                 "thousands": ",",
                 "lengthMenu": "Show _MENU_ entries",
-                "loadingRecords": "Loading...",
-                "processing": "Processing...",
+                "loadingRecords": "Initializing...",
+                "processing": '<div class="spinner"></div>',
                 "search": tableid + ":",
                 /* "search": "Filter " + tableid + ":", */
                 "zeroRecords": "Nothing found...",
@@ -209,17 +210,21 @@ function makeDataTable(tableid) {
                             '<datalist id="' + th.innerText + '-list"></datalist>')
                             //.appendTo($(column.footer()).empty())
                             .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
-                            .on('input', function () {
-                                // var val = $.fn.dataTable.util.escapeRegex(
-                                //     $(this).val()
-                                // );
-                                // column
-                                //     .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
-                                //     .draw();
+                            .on('change', function () {
+                                //option1
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                //event.stopPropagation;
+                               
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false) //CHECKEN!!!!!
+                                    .draw('page');
+                                //option 2
                                 // if (column.search() !== this.value) {
                                 //     column
                                 //         .search(this.value)
-                                //         .draw();
+                                //         .draw('page');
                                 // }
                             });
 
@@ -234,6 +239,33 @@ function makeDataTable(tableid) {
                     //}
                 });
             }
+        });
+
+        // dTable.processing(true);
+
+        // setTimeout(function () {
+        //     dTable.processing(false);
+        // }, 2000);
+
+        // $(document).on("processing.dt", function (e, settings, processing) {
+        //     if (processing) {
+        //         $.blockUI(
+        //             {
+        //                 message: "Please Wait..!",
+        //             });
+        //     } else {
+        //         $.unblockUI();
+        //     }
+        // });
+
+        $(document).on("processing.dt", function (e, settings, processing) {
+            if (processing) {
+                dTable.processing(true);
+                setTimeout(function () {
+                    dTable.processing(false);
+                }, 2000);
+            }
+            else dTable.processing(false);
         });
 
         /////NEW: link +sheet as a dropdown////////////
@@ -284,7 +316,7 @@ function makeDataTable(tableid) {
 
                             //linkedsheet.appendChild(detailsDOM.querySelector("table.detailInfo"));
                             row.child(childData, 'child').show();
-                            
+
                             makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"));
                         }, function (error) {
                             console.error("transformRE (xslTable) transform error!", error);
@@ -313,3 +345,9 @@ function format(h, d) {
         '<td>' + d + '</td>' +
         '</tr>'
 }
+
+jQuery.fn.dataTable.Api.register('processing()', function (show) {
+    return this.iterator('table', function (ctx) {
+        ctx.oApi._fnProcessingDisplay(ctx, show);
+    });
+});
