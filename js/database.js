@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //LOAD XML, this is the first action where every other action should wait for
     loadDoc(datafile, xml).then(function (xmlDoc) {
-        xml = xmlDoc;
-
+        xml = xmlDoc;        
+        targetElement.appendChild(spinner);
+        
         //XSL 
         promiseXslHeader = loadDoc('xsl/sheet-header.xsl');
         function reflect(promiseXslHeader) {
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (typeof headerTitle == 'undefined') headerTitle = "";
                 transform(xml, xslHeader, { title: headerTitle, edit: editLink }, document.querySelector("header div#heading"));
                 lastUpdated(datafile, "activity");
-                targetElement.appendChild(spinner);
             }, function (error) {
                 console.error('xsl/sheet-header.xsl', error);
             })
