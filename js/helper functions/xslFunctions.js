@@ -1,7 +1,11 @@
-function loadDocRE(url) {
+function loadDoc(url, caching = true) {
     return new Promise(function (resolve) {
         var req = new XMLHttpRequest();
-        req.open("GET", url + '?_=' + new Date().getTime());
+        if (caching) req.open("GET", url);
+        else {
+            console.log("GET " + url + " without caching");
+            req.open("GET", url + '?_=' + new Date().getTime());
+        }
         if (typeof XSLTProcessor === 'undefined') {
             try {
                 req.responseType = 'msxml-document';
@@ -62,22 +66,22 @@ function transformRE(xmlDoc, xslDoc, xsltParams, targetElement) {
     });
 }
 
-function loadDoc(url) {
-    return new Promise(function (resolve) {
-        var req = new XMLHttpRequest();
-        req.open("GET", url);
-        if (typeof XSLTProcessor === 'undefined') {
-            try {
-                req.responseType = 'msxml-document';
-            }
-            catch (e) { }
-        }
-        req.onload = function () {
-            resolve(this.responseXML)
-        }
-        req.send();
-    });
-}
+// function loadDoc(url) {
+//     return new Promise(function (resolve) {
+//         var req = new XMLHttpRequest();
+//         req.open("GET", url);
+//         if (typeof XSLTProcessor === 'undefined') {
+//             try {
+//                 req.responseType = 'msxml-document';
+//             }
+//             catch (e) { }
+//         }
+//         req.onload = function () {
+//             resolve(this.responseXML)
+//         }
+//         req.send();
+//     });
+// }
 
 function transform(xmlUrl, xslUrl, xsltParams, targetElement) {
     return new Promise(function (resolve) {

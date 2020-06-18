@@ -23,7 +23,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</a>
-			<xsl:if test="$edit">
+			<xsl:if test="$edit and not(string($edit) = 'undefined')">
 				<span class="details"> (<a href="{$edit}" id="linkEdit" class="link" target="_blank">edit...</a>)</span>
 			</xsl:if>
 		</h1>

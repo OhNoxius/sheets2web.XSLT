@@ -2,7 +2,7 @@ function databaseKeys(datafile) {
     let database, sheetNames, attrs;    
     let keyNames = [], keyValues = [];
 
-    loadDocRE(datafile).then(function (xmlDoc) {
+    loadDoc(datafile).then(function (xmlDoc) {
         database = xmlDoc;
         //let keyNames = database.querySelector("belgianjazzwiki muzikanten").children;
         attrs = database.firstElementChild.firstElementChild.firstElementChild.attributes;
@@ -38,10 +38,10 @@ function databaseKeys(datafile) {
         linkedSheetSet.delete("");
         linkedSheetType = [...linkedSheetSet];
 
-        linkedSheetType.forEach(function(e){
-			let type = document.createElement('type');
-			type.textContent = e;
-			typesDOM.appendChild(type);
-		})
+        // linkedSheetType.forEach(function(e){
+		// 	let type = document.createElement('type');
+		// 	type.textContent = e;
+		// 	typesDOM.appendChild(type);
+		// })
     });
 }

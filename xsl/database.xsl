@@ -150,10 +150,12 @@
 					<xsl:variable name="type" select="string(.)"/>
 					<xsl:for-each select="$root">
 						<xsl:if test="key('linkedsheet-ids_Type', concat(string($type), '|', $currentID))">
-							<div>
+							<div class="typeicon {string($type)}" title="type: {string($type)}">
 								<xsl:value-of select="string($type)"/>
 								<xsl:text>:</xsl:text>
-								<xsl:value-of select="count(key('linkedsheet-ids_Type', concat(string($type), '|', $currentID)))"/>
+								<span class="cssnumbers">
+									<xsl:value-of select="count(key('linkedsheet-ids_Type', concat(string($type), '|', $currentID)))"/>
+								</span>
 							</div>
 						</xsl:if>
 					</xsl:for-each>
@@ -167,19 +169,17 @@
 			<xsl:apply-templates select="child::*" mode="children-values"/>
 		</tr>
 	</xsl:template>
-	<xsl:template match="*" mode="typeNode">
+	<!--<xsl:template match="*" mode="typeNode">
 		<xsl:param name="currentID"/>
-		<div>
+		<div class="typeicon {string(.)}">
 			<xsl:value-of select="string(.)"/>
 			<xsl:text>: </xsl:text>
 			<xsl:for-each select="$root">
 				<xsl:value-of select="count(key('linkedsheet-ids_Type', string($currentID)))"/>
 			</xsl:for-each>
 		</div>
-	</xsl:template>
-	<xsl:template match="@type" mode="types">
-		<xsl:text>FLOEP</xsl:text>
-	</xsl:template>
+	</xsl:template>-->
+	
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
 			<td>
@@ -239,7 +239,7 @@
 		</xsl:if>
 	</xsl:template>
 
-<!--	<xsl:template name="processingTemplate">
+	<!--<xsl:template name="processingTemplate">
 		<xsl:param name="typelist"/>
 		<xsl:param name="currentID"/>
 

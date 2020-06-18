@@ -33,9 +33,7 @@ function transformSearch(inputfield) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    
-    
+document.addEventListener('DOMContentLoaded', function () {    
     console.log(isEdge);
 
     //LOAD XML, this is the first action where every other action should wait for

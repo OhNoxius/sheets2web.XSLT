@@ -116,6 +116,10 @@ table.dataTable thead tr:nth-child(2) th {
     padding: 2px 5px;
 }
 
+table.dataTable tbody td.linkedsheet {
+    padding: 2px;
+}
+
 td.detailsHeader {
     font-style: italic;
     text-align: right;
