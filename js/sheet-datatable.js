@@ -337,8 +337,8 @@ function makeDataTable(tableid) {
                     }
                     else {
                         childFragment.appendChild(detailsDOM.querySelector("table.detailInfo"));
-                        childData.appendChild(childFragment);
-                        row.child(childData, 'child').show();
+                        childDiv.appendChild(childFragment);
+                        row.child(childDiv, 'child').show();
                     }
                 }
                 else {
