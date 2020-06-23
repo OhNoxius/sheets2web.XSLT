@@ -2646,7 +2646,7 @@ The CeBeDeM collection comprises over 300 metres of works by 20th century Belgia
     <_ naam="" priv_="false" begin="" eind="" adres="" zip="" stad="" email="" tel="" extra="" betrokken="" />
     <_ naam="" priv_="false" begin="" eind="" adres="" zip="" stad="" email="" tel="" extra="" betrokken="" />
   </contactpersonen>
-  <dragers>
+  <drager>
     <_1_2__tape id="1/2&quot; tape" name="1/2&quot; tape" standard="" _-alias="" medium="tape" _-medium_FORM="reel" _-medium_MATERIAL="" inscription="magnetic" _-inscription_SPEC="" signal="" category="" size="" speed="" company="" begin="" wiki="">
       <description />
     </_1_2__tape>
@@ -2878,7 +2878,7 @@ The CeBeDeM collection comprises over 300 metres of works by 20th century Belgia
     <audiotape id="audiotape" name="audiotape" standard="" _-alias="" medium="tape" _-medium_FORM="" _-medium_MATERIAL="" inscription="magnetic" _-inscription_SPEC="" signal="analog" category="sound" size="" speed="" company="" begin="" wiki="">
       <description />
     </audiotape>
-  </dragers>
+  </drager>
   <informatie>
     <music_score musical_instrument="music score" />
     <live_concert musical_instrument="live concert" />
