@@ -115,6 +115,9 @@ table tr td {
     white-space: break-spaces;
     word-wrap: break-word;
 }
+table tr td.linkedsheet {
+    white-space: normal;
+}
 th { /* table.mainsheet ??? */
     /* text-align: left; */
     background-color:lightblue;

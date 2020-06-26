@@ -120,24 +120,24 @@
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 			<!-- COUNT linked items -->
 			<xsl:if test="not($id)">
-				<td class="linkedsheet">					
+				<td class="linkedsheet">
 					<!-- MET FOR EACH -->
-					<div class="wrapper">
-						<xsl:for-each select="ext:node-set($typeElements)/*">
-							<xsl:variable name="type" select="string(.)" />
-							<xsl:for-each select="$root">
-								<xsl:if test="key('linkedsheet-ids_Type', concat(string($type), '|', $currentID))">
-									<div class="typeicon {string($type)}" title="type: {string($type)}">
-										<xsl:value-of select="string($type)" />
-										<xsl:text>:</xsl:text>
-										<span class="cssnumbers">
-											<xsl:value-of select="count(key('linkedsheet-ids_Type', concat(string($type), '|', $currentID)))" />
-										</span>
-									</div>
-								</xsl:if>
-							</xsl:for-each>
+
+					<xsl:for-each select="ext:node-set($typeElements)/*">
+						<xsl:variable name="type" select="string(.)" />
+						<xsl:for-each select="$root">
+							<xsl:if test="key('linkedsheet-ids_Type', concat(string($type), '|', $currentID))">
+								<div class="typeicon {string($type)}" title="type: {string($type)}">
+									<xsl:value-of select="string($type)" />
+									<xsl:text>:</xsl:text>
+									<span class="cssnumbers">
+										<xsl:value-of select="count(key('linkedsheet-ids_Type', concat(string($type), '|', $currentID)))" />
+									</span>
+								</div>
+							</xsl:if>
 						</xsl:for-each>
-					</div>
+					</xsl:for-each>
+
 				</td>
 			</xsl:if>
 
@@ -148,7 +148,7 @@
 			<xsl:apply-templates select="child::*" mode="children-values" />
 		</tr>
 	</xsl:template>
-	
+
 
 	<xsl:template match="attribute::*" mode="attributes-values" priority="0">
 		<xsl:if test="not(starts-with(substring(name(.), 2), '-'))">
@@ -219,7 +219,7 @@
 			<xsl:value-of select="." />
 			<xsl:text>&#10;</xsl:text>
 		</xsl:if>
-	</xsl:template>	
+	</xsl:template>
 
 	<xsl:template name="split">
 		<xsl:param name="pText" />
