@@ -142,7 +142,7 @@ function makeDataTable(tableid, database = false) {
             tabledom = "tirf";
             document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) {
-                orderColumns[0][0] += 1;                
+                orderColumns[0][0] += 1;
                 //noVis.forEach((o, i, a) => a[i] = a[i]-1);
                 //noVis.push($('table.mainsheet th.linkedinfo').index());
             }
@@ -462,8 +462,8 @@ function format(h, d) {
         '</tr>'
 }
 
-jQuery.fn.dataTable.Api.register('processing()', function (show) {
-    return this.iterator('table', function (ctx) {
-        ctx.oApi._fnProcessingDisplay(ctx, show);
-    });
-});
+// jQuery.fn.dataTable.Api.register('processing()', function (show) {
+//     return this.iterator('table', function (ctx) {
+//         ctx.oApi._fnProcessingDisplay(ctx, show);
+//     });
+// });
