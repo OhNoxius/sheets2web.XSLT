@@ -318,24 +318,29 @@ function makeDataTable(tableid, database = false) {
                                     }
                                 });
 
-                            //let datalist = $('<datalist id="' + headerText + '-list"></datalist>').appendTo("table.mainsheet thead tr:eq(1) th").eq(column.index());
-
                             let ARR = column.data().map(function (value, index) {
                                 return value.replace(/<\/?[^>]+(>|$)/g, "");
                             }).unique().toArray();
                             //let ARR = column.nodes().toJQuery().map(function (val, i) { return $(val).text() });
                             //console.log(ARR);
-                            ARR = ARR.join(delimiter).split(delimiter);
+                            const delims = /([:\r\n]+)/g
+                            ARR = ARR.join(delimiter).replace(delims, ";").split(delimiter);
                             ARR.forEach((o, i, a) => a[i] = a[i].trim());
                             let SET = new Set(ARR);
                             ARR = [...SET].sort();
-                            //column.data().unique().sort().each(function (d, j) {
+
+                            //OPTION 1: HTML5 datalists
+                            // ////column.data().unique().sort().each(function (d, j) {
+                            // let datalist = $('<datalist id="' + th.innerText + '-list"></datalist>').insertAfter($(input));
                             // ARR.forEach(function (val) {
                             //     datalist.append('<option value="' + val + '" />')
                             // });
-                            $(function () {
-                                //var ARR = [...SET].sort();
+                            //OPTION 2: jQuery UI autocomplete
+                            //$(function () {
+                            $(input).on("click change", function () {
                                 $(input).autocomplete({
+                                    minLength: 0, //in combination with on("focus") makes that all the options are shown when click on input
+                                    autoFocus: true,
                                     source: ARR,
                                     select: function (event, ui) {
                                         if (column.search() !== ui.item.value) {

@@ -1,6 +1,6 @@
 html{
     font-family: "Roboto", "Calibri", "Arial";
-    font-size: 10pt;
+    font-size: 9pt;
     color: black;
     height: 100%;   
 }
@@ -112,7 +112,7 @@ table.linkedsheet tbody tr {
 }
 
 table tr td {
-    /*white-space: break-spaces;*/
+    white-space: pre-line;
     word-wrap: break-word;
 }
 table tr td.linkedsheet {
