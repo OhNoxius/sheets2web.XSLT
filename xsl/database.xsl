@@ -185,6 +185,8 @@
 					</xsl:if>
 					<xsl:if test="starts-with(substring(name(./parent::*/@*[position()=$nextpos]), 2), '-')">
 						<p class="details">
+							<xsl:value-of select="local-name(./parent::*/@*[position()=$nextpos])" />
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="./parent::*/@*[position()=$nextpos]" />
 						</p>
 					</xsl:if>
