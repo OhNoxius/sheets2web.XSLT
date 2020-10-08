@@ -136,17 +136,20 @@ function makeDataTable(tableid, database = false) {
         const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
         let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
         let tabledom = "ftir";
+        let filterlabel = "Search:";
 
         if (database) {
             scrollY = scrollY - 50 + 20 - ((linkedSheetType.length - 2) * 19); // - 2nd header + no search filter
             tabledom = "tirf";
-            document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
+            //document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) {
                 orderColumns[0][0] += 1;
                 //noVis.forEach((o, i, a) => a[i] = a[i]-1);
                 //noVis.push($('table.mainsheet th.linkedinfo').index());
             }
+            filterlabel = "Filter '" + tableid + "':";
         }
+
 
 
         //INITIALIZE DATATABLE:
@@ -215,7 +218,7 @@ function makeDataTable(tableid, database = false) {
             {
                 "targets": 'date',
                 "className": 'date',
-                "width": 'calc(20px + 10ex)',
+                "width": 'calc(10ex + 10px)', // ex = hoogte van "x", genoeg voor 10 karakters yyyy-mm-dd
                 //"type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
             },
             // {
@@ -253,7 +256,7 @@ function makeDataTable(tableid, database = false) {
                 "lengthMenu": "Show _MENU_ entries",
                 "loadingRecords": "Initializing...",
                 "processing": '<div class="spinner"></div>',
-                "search": 'filter "' + tableid + '":',
+                "search": filterlabel, //'filter "' + tableid + '":',
                 "zeroRecords": "Nothing found...",
                 "paginate": {
                     "first": "First",
@@ -305,7 +308,7 @@ function makeDataTable(tableid, database = false) {
                                 });
                         }
                         else {
-                            let input = $('<input type="search" list="' + th.innerText + '-list" id="' + th.innerText + '-input" name="' + th.innerText + '" class="headersearch" />'
+                            let input = $('<input type="search" size="10" list="' + th.innerText + '-list" id="' + th.innerText + '-input" name="' + th.innerText + '" class="headersearch" />'
                             )//+ '<datalist id="' + th.innerText + '-list"></datalist>')
                                 //.appendTo($(column.footer()).empty())
                                 .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
