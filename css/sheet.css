@@ -57,7 +57,7 @@ h5 {
     color: grey;
     /* padding-left: 5px; */
 }
-.tooltip {
+.idtip {
     text-decoration: underline solid blue;
     cursor: pointer;
 }
@@ -253,9 +253,6 @@ div.childdiv div.dataTables_wrapper div.dataTables_filter label {
 div.childdiv div.dataTables_wrapper div.dataTables_filter {
     float: right;
     /* text-align: left; */
-}
-div.childdiv div.dataTables_wrapper div.dataTables_info {
-    display: none;
 }
 
 

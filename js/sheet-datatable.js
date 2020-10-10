@@ -1,31 +1,21 @@
-function makeDataTable(tableid, database = false) {
-    //if (dropdown) isDatabase = false;
+function makeDataTable(tableid, mode = 'sheet') {
     let table = document.getElementById(tableid);//document.querySelector("table#"+tableid);
     let dTable;
+    let dropdowns = new Map();
+    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    let scrollY, tabledom, filterlabel, scrollCollapse;
+    let celval;
+
+    //console.log(table);
+
     //if (typeof isDatabase == 'undefined') isDatabase = false;
+
     if (!$.fn.dataTable.isDataTable(table)) {
 
-        //Format all the hyperlinks in <td> elements FIRST!so that column width is accordingly
-        let cellval, secondslash, thirdslash, shortURL;
-        // OPTION 1
-        // $('table#' + tableid + ' td:contains("http"), table#' + tableid + ' td:contains("www")').html(function () {
-        //     cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
-        //     secondslash = cellval.indexOf('/', cellval.indexOf('/') + 1);
-        //     thirdslash = cellval.indexOf('/', secondslash + 1);
-        //     if (cellval.slice(secondslash + 1, secondslash + 4) == 'www') shortURL = cellval.slice(secondslash + 5, thirdslash);
-        //     else shortURL = cellval.slice(secondslash + 1, thirdslash);
-        //     return "<a title='" + cellval + "' class='tableLink' href='" + $(this).text() + "' target='_blank'>" + shortURL + "</a>"
-        // });
-
-        // OPTION2: SLIM ALTERNATIEF, mr voorlopig nog volledig url weergave, en $ teken loopt mis
         $(table).find('td:contains("http"), td:contains("www")').html(function () {
-            let content = $(this).text();
-            let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
-            let element_content = content.replace(exp_match, "<a class='url' target='_blank' title='$1' href='$1'>$1</a>");
-            let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
-            let new_content = element_content.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
-            return new_content;
+            return createHyperlinks($(this).text());
         });
+
 
         //search QUESTION MARKS       
         $(table).find('tbody tr td').filter(function () {
@@ -36,16 +26,15 @@ function makeDataTable(tableid, database = false) {
         });
 
         //TOOLTIPS
-        var getTooltip = function (sheetArg, idArg) {
-            return new Promise(function (resolve) {
-                transform(xml, xslTooltip, { sheet: sheetArg, id: idArg }).then(function (response) {
-                    resolve(response);
-                })
-            }, function (error) {
-                reject(Error(error));
-            });
-        }
-
+        // var getTooltip = function (sheetArg, idArg) {
+        //     return new Promise(function (resolve) {
+        //         transform(xml, xslTooltip, { sheet: sheetArg, id: idArg }).then(function (response) {
+        //             resolve(response);
+        //         })
+        //     }, function (error) {
+        //         reject(Error(error));
+        //     });
+        // }
         // $(function () {
         //     $(document).tooltip({
         //         items: ".tooltip",
@@ -65,65 +54,6 @@ function makeDataTable(tableid, database = false) {
         //     })
         // });
 
-        let xmltag = /[^A-Za-z0-9-]/gi; //BADBADBADBADABDABDADB
-
-        $(table).find('.tooltip').tooltipster({
-            content: '',//'Loading...',
-            // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
-            functionBefore: function (instance, helper) {
-                let el = helper.origin;
-                var $origin = $(helper.origin);
-
-                // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
-                if ($origin.data('loaded') !== true) {
-                    if (el.textContent) {
-                        let sheet = el.getAttribute("sheet").replace(xmltag, "_");
-                        let value = el.textContent.replace(xmltag, "_");
-                        let query = xml.querySelector(sheet + " " + value);
-                        if (query) {
-                            let result = Array.from(query.attributes, function ({ name, value }) {
-                                if (value && name != 'id') {
-                                    if (value.includes('www') || value.includes('http')) {
-                                        let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
-                                        let newvalue = value.replace(exp_match, "<a class='url' target='_blank' title='$1' href='$1'>$1</a>");
-                                        let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
-                                        value = newvalue.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
-                                    }
-                                    return ("<li style='list-style-type:none;'><span class='inline description'>" + name + ": </span>" + value + "</li>")
-                                }
-                            });
-                            instance.content(result);
-                            $origin.data('loaded', true);
-                        }
-                    }
-                }
-            },
-            interactive: true
-        });
-
-        // $(function () {
-        //     $(document).tooltip({
-        //         items: "[title]",
-        //         content: function () {
-        //             let element = $(this);
-        //             let attr = $(this).attr('title');
-        //             if (element.is("[data-geo]")) {
-        //                 let text = element.text();
-        //                 return "<img class='map' alt='" + text +
-        //                     "' src='http://maps.google.com/maps/api/staticmap?" +
-        //                     "zoom=11&size=350x350&maptype=terrain&sensor=false&center=" +
-        //                     text + "'>";
-        //             }
-        //             if (typeof attr === typeof undefined || attr === false) {                        
-        //                 return "AWESOME";
-        //             }
-        //             else { 
-        //                 return element.attr("title");
-        //             }
-        //         }
-        //     });
-        // });
-
         let noVis = [];
         $(table).children('thead').children('tr:first-child').children('th.noVis').each(function () { noVis.push($(this).index()); });
         let orderColumns;
@@ -133,13 +63,14 @@ function makeDataTable(tableid, database = false) {
         }
         else orderColumns = [[0, 'asc']];
 
-        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        let scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
-        let tabledom = "ftir";
-        let filterlabel = "Search:";
-
-        if (database) {
-            scrollY = scrollY - 50 + 20 - ((linkedSheetType.length - 2) * 19); // - 2nd header + no search filter
+        if (mode == 'sheet') {
+            scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
+            tabledom = "ftir";
+            filterlabel = "Filter '" + tableid + "':";
+            scrollCollapse = true;
+        }
+        else if (mode == 'database') {
+            scrollY = vh - 50 - 36 - 16 - 50 - ((linkedSheetType.length - 2) * 18);
             tabledom = "tirf";
             //document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) {
@@ -148,8 +79,14 @@ function makeDataTable(tableid, database = false) {
                 //noVis.push($('table.mainsheet th.linkedinfo').index());
             }
             filterlabel = "Filter '" + tableid + "':";
+            scrollCollapse = true;
         }
-
+        else if (mode == "child") {
+            scrollY = '';
+            tabledom = "ftr";
+            filterlabel = "Filter:";
+            scrollCollapse = true;
+        }
 
 
         //INITIALIZE DATATABLE:
@@ -164,13 +101,13 @@ function makeDataTable(tableid, database = false) {
             "orderClasses": false,
             "orderCellsTop": true,
             "paging": false,
-            "processing": true,
+            //"processing": true,
             "scrollY": scrollY,
-            "scrollCollapse": true,
+            "scrollCollapse": scrollCollapse,
             // "fixedColumns": true,
             /* "dom": '<"top"i>ft', */
             "createdRow": function (row, data, dataIndex) {
-                //if (!database) {
+                //if (!isDatabase) {
                 let hasDetails = false;
                 //let dataNoVis = data.slice(noVis[0]).reduce( (accumulator, currentValue, currentIndex, array) => accumulator + currentValue );
                 for (let i = 0; i < noVis.length; i++) {
@@ -256,7 +193,7 @@ function makeDataTable(tableid, database = false) {
                 "lengthMenu": "Show _MENU_ entries",
                 "loadingRecords": "Initializing...",
                 "processing": '<div class="spinner"></div>',
-                "search": filterlabel, //'filter "' + tableid + '":',
+                "search": filterlabel,
                 "zeroRecords": "Nothing found...",
                 "paginate": {
                     "first": "First",
@@ -270,7 +207,8 @@ function makeDataTable(tableid, database = false) {
                 }
             },
             "initComplete": function () {
-                if (database) {
+                createTooltips(table);
+                if (mode == 'database') {
                     //$('table#' + tableid + ' thead tr').clone(true).appendTo('#' + tableid + ' thead' );
                     this.api().columns().every(function () {
                         let column = this;
@@ -295,6 +233,7 @@ function makeDataTable(tableid, database = false) {
                                 //filter in column 1, with an regex, no smart filtering, not case sensitive
                                 column.search(checkboxes, true, false, false).draw(false);
                             });
+                            dropdowns.set(column.index(), linkedSheetType);
                         }
                         else if (th.classList.contains("date")) {
                             $('<input type="search" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />')
@@ -331,6 +270,8 @@ function makeDataTable(tableid, database = false) {
                             let SET = new Set(ARR);
                             ARR = [...SET].sort();
 
+                            dropdowns.set(column.index(), ARR);
+
                             //OPTION 1: HTML5 datalists
                             // ////column.data().unique().sort().each(function (d, j) {
                             // let datalist = $('<datalist id="' + th.innerText + '-list"></datalist>').insertAfter($(input));
@@ -356,8 +297,27 @@ function makeDataTable(tableid, database = false) {
                         }
                         //}
                     });
+                    console.log(dropdowns);
                 }
             }
+        });
+
+        // $(table).on( 'init.dt', function () {
+        //     console.log( 'Init occurred at: '+new Date().getTime() );
+        // }).dataTable();
+
+        //tooltipster on every draw? overkill, but somehow somewhere tooltipsters get lost...
+        dTable.on('draw', function () {
+            console.log('redraw occurred at: ' + new Date().getTime());
+            table = document.getElementById(tableid);
+            $(table).find(".tooltipstered").tooltipster('destroy');
+            createTooltips(table);
+            //$(table).find(".tooltipstered").tooltipster('enable');
+        });
+        dTable.on('destroy', function () {
+            console.log('destroy occurred at: ' + new Date().getTime());
+            //table = document.getElementById(tableid);
+            //createTooltips(table);
         });
 
         // dTable.processing(true);
@@ -429,7 +389,7 @@ function makeDataTable(tableid, database = false) {
                 // Open this row
                 tr.addClass('shown');
                 if (!tr.hasClass('loaded')) {
-                    if (database) {
+                    if (mode == 'database') {
                         transform(xml, xslTable, { id: tr.attr("id") }).then(function (linkedsheet) {
                             tr.addClass('loaded');
 
@@ -440,7 +400,7 @@ function makeDataTable(tableid, database = false) {
                             //linkedsheet.appendChild(detailsDOM.querySelector("table.detailInfo"));
                             row.child(childDiv, 'child').show();
 
-                            makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"));
+                            makeDataTable(tr.next('tr').find('table.linkedsheet').attr("id"), "child");
                         }, function (error) {
                             console.error("transform(xslTable) transform error!", error);
                         })
@@ -474,3 +434,65 @@ function format(h, d) {
 //         ctx.oApi._fnProcessingDisplay(ctx, show);
 //     });
 // });
+
+function createTooltips(table) {
+    const xmltag = /[^A-Za-z0-9-]/gi;
+    table.getAttribute("id");
+    console.log("TOOLTIPSTER: " + table.getAttribute("id"));
+    $(table).find('.idtip:not(.tooltipstered)').tooltipster({
+        content: 'Loading...',//'Loading...',
+        // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
+        functionBefore: function (instance, helper) {
+            let el = helper.origin;
+            var $origin = $(helper.origin);
+            let sheet, value, query;
+            // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
+            if ($origin.data('loaded') !== true) {
+                if (el.textContent) {
+                    sheet = el.getAttribute("sheet").replace(xmltag, "_");
+                    value = el.textContent.replace(xmltag, "_");
+                    //query = xml.querySelector(sheet + " " + value);
+                    query = xml.getElementsByTagName(value)[0];
+                    //console.log(value);
+                    if (query) {
+                        let result = Array.from(query.attributes, function ({ name, value }) {
+                            if (value && name != 'id') {
+                                return formatTooltip(name, value);
+                            }
+                        });
+                        instance.content(result);
+                        $origin.data('loaded', true); //maybe makes the tooltips not work after searching and ordering?
+                    }
+                }
+            }
+        },
+        interactive: true
+    });
+}
+
+function formatTooltip(name, value) {
+    return ("<li style='list-style-type:none;'><span class='inline description'>" + name + ": </span>" + createHyperlinks(value) + "</li>")
+}
+
+function createHyperlinks(content) {
+    //Format all the hyperlinks in <td> elements FIRST!so that column width is accordingly
+
+    // OPTION 1
+    // let secondslash, thirdslash, shortURL;
+    // 
+    //cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
+    //secondslash = cellval.indexOf('/', cellval.indexOf('/') + 1);
+    //thirdslash = cellval.indexOf('/', secondslash + 1);
+    //if (cellval.slice(secondslash + 1, secondslash + 4) == 'www') shortURL = cellval.slice(secondslash + 5, thirdslash);
+    //else shortURL = cellval.slice(secondslash + 1, thirdslash);
+    //return "<a title='" + cellval + "' class='tableLink' href='" + $(this).text() + "' target='_blank'>" + shortURL + "</a>"
+    //
+
+    // OPTION2: SLIM ALTERNATIEF, mr voorlopig nog volledig url weergave, en $ teken loopt mis
+    let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
+    let element_content = content.replace(exp_match, "<a class='url' target='_blank' title='$1' href='$1'>$1</a>");
+    let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
+    let new_content = element_content.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
+    return new_content;
+
+}

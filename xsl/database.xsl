@@ -51,7 +51,7 @@
 
 	<!-- LINKED SHEET -->
 	<xsl:template match="*" mode="linkedsheet">
-		<table class="linkedsheet row-border" id="{$id}+">
+		<table id="{$id}+" class="linkedsheet row-border" >
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader"/>
 			</thead>
@@ -164,10 +164,9 @@
 				<span>
 					<xsl:if test="key('allElements', current())">
 						<xsl:attribute name="class">
-							<xsl:text>tooltip</xsl:text>
+							<xsl:text>idtip</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
-
 					<xsl:attribute name="sheet">
 						<xsl:value-of select="local-name(.)"/>
 					</xsl:attribute>

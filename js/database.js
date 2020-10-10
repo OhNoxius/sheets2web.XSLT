@@ -37,15 +37,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //XSL DATABASE
         reflect(promiseXslHeader).then(function (v) {
-            loadDoc('xsl/database.xsl', caching).then(function (xsl) {
+            loadDoc('xsl/database.xsl').then(function (xsl) {
                 xslTable = xsl;
 
                 //EXTRA for database version:
                 transform(xml, xslTable, { edge: isEdge, types: linkedSheetType.join() }, targetElement).then(function () {
-                    any = makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"), true);
-                    loadDoc('xsl/sheet-tooltip.xsl', caching).then(function (xsl) {
-                        xslTooltip = xsl;
-                    })
+                    any = makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"), 'database');
+                    // loadDoc('xsl/sheet-tooltip.xsl', caching).then(function (xsl) {
+                    //     xslTooltip = xsl;
+                    // })
                 })
             })
         }, function (error) {
