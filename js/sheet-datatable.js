@@ -5,6 +5,7 @@ function makeDataTable(tableid, mode = 'sheet') {
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     let scrollY, tabledom, filterlabel, scrollCollapse;
     let celval;
+    let hiddenDropdowns = [];
 
     //console.log(table);
 
@@ -79,7 +80,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                 //noVis.push($('table.mainsheet th.linkedinfo').index());
             }
             filterlabel = "Filter '" + tableid + "':";
-            scrollCollapse = true;
+            scrollCollapse = false;
         }
         else if (mode == "child") {
             scrollY = '';
@@ -87,6 +88,8 @@ function makeDataTable(tableid, mode = 'sheet') {
             filterlabel = "Filter:";
             scrollCollapse = true;
         }
+
+        console.log(noVis);
 
 
         //INITIALIZE DATATABLE:
@@ -270,34 +273,55 @@ function makeDataTable(tableid, mode = 'sheet') {
                             let SET = new Set(ARR);
                             ARR = [...SET].sort();
 
-                            dropdowns.set(column.index(), ARR);
 
-                            //OPTION 1: HTML5 datalists
-                            // ////column.data().unique().sort().each(function (d, j) {
-                            // let datalist = $('<datalist id="' + th.innerText + '-list"></datalist>').insertAfter($(input));
-                            // ARR.forEach(function (val) {
-                            //     datalist.append('<option value="' + val + '" />')
-                            // });
-                            //OPTION 2: jQuery UI autocomplete
-                            //$(function () {
-                            $(input).on("click change", function () {
-                                $(input).autocomplete({
-                                    minLength: 0, //in combination with on("focus") makes that all the options are shown when click on input
-                                    autoFocus: true,
-                                    source: ARR,
-                                    select: function (event, ui) {
-                                        if (column.search() !== ui.item.value) {
-                                            column
-                                                .search(ui.item.value)
-                                                .draw('page');
+
+                            if (noVis.indexOf(column.index()) > -1) {
+                                hiddenDropdowns = hiddenDropdowns.concat(ARR);
+                            }
+                            else {
+                                //OPTION 1: HTML5 datalists
+                                // ////column.data().unique().sort().each(function (d, j) {
+                                // let datalist = $('<datalist id="' + th.innerText + '-list"></datalist>').insertAfter($(input));
+                                // ARR.forEach(function (val) {
+                                //     datalist.append('<option value="' + val + '" />')
+                                // });
+                                //OPTION 2: jQuery UI autocomplete
+                                //$(function () {
+                                $(input).on("click change", function () {
+                                    $(input).autocomplete({
+                                        minLength: 0, //in combination with on("focus") makes that all the options are shown when click on input
+                                        autoFocus: true,
+                                        source: ARR,
+                                        select: function (event, ui) {
+                                            if (column.search() !== ui.item.value) {
+                                                column
+                                                    .search(ui.item.value)
+                                                    .draw('page');
+                                            }
                                         }
-                                    }
+                                    });
                                 });
-                            });
+                            }
                         }
                         //}
                     });
                     console.log(dropdowns);
+                    console.log(hiddenDropdowns);
+                    let filterel = document.getElementById(tableid + "_filter");
+                    let filterinput = filterel.querySelector("input");
+                    $(filterinput).autocomplete({
+                        minLength: 0, //in combination with on("focus") makes that all the options are shown when click on input
+                        autoFocus: true,
+                        position: { my: "left bottom", at: "left top", collision: "flip" },
+                        source: hiddenDropdowns,
+                        select: function (event, ui) {
+                            if (column.search() !== ui.item.value) {
+                                column
+                                    .search(ui.item.value)
+                                    .draw('page');
+                            }
+                        }
+                    });
                 }
             }
         });
