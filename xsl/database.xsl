@@ -190,7 +190,7 @@
 							<!--<xsl:when test="starts-with(name(./parent::*/@*[position()=$nextpos]), ':')">-->
 							<xsl:otherwise>
 								<p class="details">
-									<xsl:value-of select="substring(local-name(./parent::*/@*[position()=$nextpos]),1)" />
+									<xsl:value-of select="substring(local-name(./parent::*/@*[position()=$nextpos]),2)" />
 									<xsl:text>: </xsl:text>
 									<xsl:value-of select="./parent::*/@*[position()=$nextpos]" />
 								</p>
