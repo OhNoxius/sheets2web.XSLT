@@ -35,7 +35,7 @@
 	<script src="js/linkedsheet-dropdown.js"></script>
 	<script src="js/database.js"></script>
     <script src="js/sheet-datatable.js"></script>
-    
+
     <link rel="stylesheet" type="text/css" href="css/jazz_BE_concerts.css" />
 
 	<script>
@@ -50,7 +50,7 @@
 		//choose character that will be used to separate content inside cells
 		let delimiter = ";";
 
-		//DON'T TOUCH			
+		//DON'T TOUCH
 		let keys = {};
 		let linkedSheetType = [];
 		databaseKeys(datafile);
@@ -60,8 +60,12 @@
 <body>
 	<header>
 		<div id="heading"></div>
+		<div id="status">
+			<label for="statusBar">Loading xml:</label>
+			<progress id="statusBar"></progress>
+		</div>
 		<div id="activity"></div>
-		<div id="filters"></div>
+		<!-- <div id="filters"></div> -->
 	</header>
 	<nav>
 		<div id="menu"></div>

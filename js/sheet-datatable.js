@@ -263,7 +263,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                                 });
 
                             let ARR = column.data().map(function (value, index) {
-                                return value.replace(/<\/?[^>]+(>|$)/g, "");
+                                return value.replace(/<\/?[^>]+(>|$)/g, '\n');
                             }).unique().toArray();
                             //let ARR = column.nodes().toJQuery().map(function (val, i) { return $(val).text() });
                             //console.log(ARR);
@@ -272,8 +272,6 @@ function makeDataTable(tableid, mode = 'sheet') {
                             ARR.forEach((o, i, a) => a[i] = a[i].trim());
                             let SET = new Set(ARR);
                             ARR = [...SET].sort();
-
-
 
                             if (noVis.indexOf(column.index()) > -1) {
                                 hiddenDropdowns = hiddenDropdowns.concat(ARR);
@@ -305,8 +303,9 @@ function makeDataTable(tableid, mode = 'sheet') {
                         }
                         //}
                     });
-                    console.log(dropdowns);
-                    console.log(hiddenDropdowns);
+                    // console.log(dropdowns);
+                    // console.log(hiddenDropdowns);
+                    
                     let filterel = document.getElementById(tableid + "_filter");
                     let filterinput = filterel.querySelector("input");
                     $(filterinput).autocomplete({

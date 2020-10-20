@@ -3,6 +3,9 @@
 	<xsl:output method="html" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" encoding="UTF-8" />
 
 	<xsl:strip-space elements="*" />
+	
+	<!-- FIRST DUPLICATE ALL ELEMENTS with @_concerts that contains ";" or "&#xA;"???? -->
+	<!-- then key will work -->
 
 	<!-- PARAMETERS -->
 	<xsl:param name="input" />
@@ -21,11 +24,17 @@
 			<xsl:with-param name="pText" select="$types" />
 		</xsl:call-template>
 	</xsl:variable>
-
+	
+	<!--<xsl:variable name="ids">
+		<xsl:call-template name="split">
+			<xsl:with-param name="pText" select="$id" />
+		</xsl:call-template>
+	</xsl:variable>-->
+	
 	<!-- KEYS -->
-	<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />
-	<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])]))" />
-	<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />
+	<!--<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />-->
+	<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="translate(concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])])), concat('&#xA;',@type,'|'), '&#xA;')" />
+	<!--<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />-->
 	<xsl:key name="allElements" match="*" use="attribute::*[1]" />
 
 	<!-- ############# -->
@@ -56,7 +65,7 @@
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
 			<tbody>
-				<xsl:apply-templates select="child::*[attribute::*[local-name() = $mainsheet] = $id]" mode="autovalues" />
+				<xsl:apply-templates select="child::*[contains(attribute::*[local-name() = $mainsheet][1], '1969-08-22')]" mode="autovalues" />
 			</tbody>
 		</table>
 	</xsl:template>
@@ -234,16 +243,16 @@
 	<xsl:template name="split">
 		<xsl:param name="pText" />
 		<!-- types are seperated by a comma -->
-		<xsl:variable name="separator">,</xsl:variable>
+		<!--<xsl:variable name="separator">,</xsl:variable>-->
 
 		<xsl:choose>
 			<xsl:when test="string-length($pText) = 0" />
-			<xsl:when test="contains($pText, $separator)">
+			<xsl:when test="contains($pText, ',')">
 				<type>
-					<xsl:value-of select="substring-before($pText, $separator)" />
+					<xsl:value-of select="substring-before($pText, ',')" />
 				</type>
 				<xsl:call-template name="split">
-					<xsl:with-param name="pText" select="substring-after($pText, $separator)" />
+					<xsl:with-param name="pText" select="substring-after($pText, ',')" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
