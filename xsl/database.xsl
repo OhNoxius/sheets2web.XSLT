@@ -19,11 +19,11 @@
 	<xsl:variable name="mainsheet" select="name(/*[1]/*[1])"/>
 	<xsl:variable name="linkedsheetNode" select="/*[1]/*[starts-with(name(.), '_')]"/>
 
-	<xsl:variable name="typeElements">
+	<!--<xsl:variable name="typeElements">
 		<xsl:call-template name="split">
 			<xsl:with-param name="pText" select="$types"/>
 		</xsl:call-template>
-	</xsl:variable>
+	</xsl:variable>-->
 
 	<!--<xsl:variable name="ids">
 		<xsl:call-template name="split">
@@ -33,7 +33,7 @@
 
 	<!-- KEYS -->
 	<!--<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />-->
-	<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])]))"/>
+	<!--<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])]))"/>-->
 	<!--<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />-->
 	<xsl:key name="allElements" match="*" use="attribute::*[1]"/>
 
@@ -110,9 +110,9 @@
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="attribute::*" mode="attributes-header" priority="0">
-		<!--<xsl:variable name="nextpos" select="position()+1" />-->
-		<!--<xsl:if test="not(starts-with(substring(name(.), 2), '-')) and not(starts-with(substring(name(.), 2), '('))">-->
+	<!--<xsl:template match="attribute::*" mode="attributes-header" priority="0">
+		<!-\-<xsl:variable name="nextpos" select="position()+1" />-\->
+		<!-\-<xsl:if test="not(starts-with(substring(name(.), 2), '-')) and not(starts-with(substring(name(.), 2), '('))">-\->
 		<xsl:if test="not(starts-with(name(.), '_'))">
 			<th>
 				<xsl:if test="position() = 1">
@@ -121,6 +121,17 @@
 				<xsl:value-of select="translate(name(.),'_', ' ')"/>
 			</th>
 		</xsl:if>
+	</xsl:template>-->
+
+	<xsl:template match="attribute::*[not(starts-with(name(.), '_'))]" mode="attributes-header" priority="0">
+		<th>
+			<xsl:value-of select="translate(name(.),'_', ' ')"/>
+		</th>
+	</xsl:template>
+	<xsl:template match="attribute::*[position() = 2]" mode="attributes-header" priority="0">
+		<th class="title">
+			<xsl:value-of select="translate(name(.),'_', ' ')"/>
+		</th>
 	</xsl:template>
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
@@ -130,11 +141,14 @@
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values"/>
 			<!-- COUNT linked items -->
 			<xsl:if test="not($id)">
-				<td class="linkedsheet">
+				<td class="linkedinfo">
+					<xsl:attribute name="linkid">
+						<xsl:value-of select="@id"/>
+					</xsl:attribute>
 					<!--<xsl:variable name="el" select="."/>-->
 					<!-- MET FOR EACH -->
 
-					<xsl:for-each select="ext:node-set($typeElements)/*">
+					<!--<xsl:for-each select="ext:node-set($typeElements)/*">
 						<xsl:variable name="type" select="string(.)"/>
 						<xsl:for-each select="$root">
 							<xsl:if test="key('linkedsheet-ids_Type', concat(string($type), '|', $currentID))">
@@ -147,7 +161,7 @@
 								</div>
 							</xsl:if>
 						</xsl:for-each>
-					</xsl:for-each>
+					</xsl:for-each>-->
 
 				</td>
 			</xsl:if>
@@ -241,10 +255,10 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="split">
+	<!--<xsl:template name="split">
 		<xsl:param name="pText"/>
-		<!-- types are seperated by a comma -->
-		<!--<xsl:variable name="separator">,</xsl:variable>-->
+		<!-\- types are seperated by a comma -\->
+		<!-\-<xsl:variable name="separator">,</xsl:variable>-\->
 
 		<xsl:choose>
 			<xsl:when test="string-length($pText) = 0"/>
@@ -262,7 +276,7 @@
 				</type>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
+	</xsl:template>-->
 
 	<!-- AUTO OVERRIDE some common headers........................................................... -->
 	<xsl:template match="@id" mode="attributes-header">

@@ -49,20 +49,22 @@
 		let editLink;
 		//choose character that will be used to separate content inside cells
 		let delimiter = ";";
+		let cashing = false; //disable cashing
 
 		//DON'T TOUCH
 		let keys = {};
-		let linkedSheetType = [];
-		databaseKeys(datafile);
+		let linkedsheetTypes = new Set();
+		let linkMap = new Map();
 	</script>
 </head>
 
 <body>
 	<header>
 		<div id="heading"></div>
-		<div id="status">
-			<label for="statusBar">Loading xml:</label>
-			<progress id="statusBar"></progress>
+		<div id="status">			
+			<progress id="statusBar">
+				<label for="statusBar">Loading xml:</label>
+			</progress>
 		</div>
 		<div id="activity"></div>
 		<!-- <div id="filters"></div> -->

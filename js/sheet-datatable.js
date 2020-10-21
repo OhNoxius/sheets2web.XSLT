@@ -7,16 +7,11 @@ function makeDataTable(tableid, mode = 'sheet') {
     let celval;
     let hiddenDropdowns = [];
 
-    //console.log(table);
-
-    //if (typeof isDatabase == 'undefined') isDatabase = false;
-
     if (!$.fn.dataTable.isDataTable(table)) {
 
         $(table).find('td:contains("http"), td:contains("www")').html(function () {
             return createHyperlinks($(this).text());
         });
-
 
         //search QUESTION MARKS       
         $(table).find('tbody tr td').filter(function () {
@@ -25,6 +20,17 @@ function makeDataTable(tableid, mode = 'sheet') {
             cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
             return "<span class='doubt' title='?'>" + cellval.slice(1, cellval.length) + "</span>"
         });
+
+        //LINKEDINFO: look up number of ids for each type (CAN LOOK FOR @omvang, @size, ... to be more accurate?)
+        table.querySelectorAll('td.linkedinfo').forEach(function (node) {
+            if (linkMap.has(node.getAttribute("linkid"))) {
+                linkMap.get(node.getAttribute("linkid")).forEach(function (value, key, map) {                    
+                    node.innerHTML += '<div class="typeicon ' + key + '" title="type: ' + key + '">' +
+                        key + ':' + '<span class="cssnumbers">' + value + '</span>' +
+                        '</div>';
+                });
+            }
+        });        
 
         //TOOLTIPS
         // var getTooltip = function (sheetArg, idArg) {
@@ -71,7 +77,7 @@ function makeDataTable(tableid, mode = 'sheet') {
             scrollCollapse = true;
         }
         else if (mode == 'database') {
-            scrollY = vh - 50 - 36 - 16 - 50 - ((linkedSheetType.length - 2) * 18);
+            scrollY = vh - 50 - 36 - 16 - 50 - ((linkedsheetTypes.size - 2) * 18);
             tabledom = "tirf";
             //document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) {
@@ -89,14 +95,14 @@ function makeDataTable(tableid, mode = 'sheet') {
             scrollCollapse = true;
         }
 
-        console.log(noVis);
+        //console.log(noVis);
 
 
         //INITIALIZE DATATABLE:
         //---------------------
         dTable = $(table).DataTable({
-            // responsive: true,
-            "autoWidth": false,
+            responsive: true,
+            "autoWidth": true,
             "dom": tabledom,
             "ordering": true,
             "order": orderColumns, //[[0, 'asc'], [1, 'asc']],
@@ -119,37 +125,54 @@ function makeDataTable(tableid, mode = 'sheet') {
                         break;
                     }
                 }
-
                 if (hasDetails) $(row).children("td.details").addClass('details-control');
                 //}
             },
-            "columnDefs": [{
-                "targets": 'details',
+            "columnDefs": [
+            //{
+            //     "targets": 'details',
+            //     "orderable": false,
+            //     "data": null,
+            //     "defaultContent": '',
+            // },
+            // {
+            //     "targets": '_all',
+            //     "type": 'html'
+            // },
+            // {
+            //     "targets": 'linkedinfo',
+            //     "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
+            //         //td.innerText = td.getAttribute("linkid");
+            //         //let typediv = document.createElement('div');
+            //         td.innerHTML = "";
+            //         if (linkMap.has(td.getAttribute("linkid"))) {
+            //             linkMap.get(td.getAttribute("linkid")).forEach(function (value, key, map) {            //                 
+            //                 td.innerHTML += '<div class="typeicon ' + key + '" title="type: ' + key + '">' +
+            //                     key + ':' + '<span class="cssnumbers">' + value + '</span>' +
+            //                     '</div>';
+            //                     cellData += key+ " , ";
+            //                 td.innerHTML = cellData;
+            //             });
+            //         }
+            //     },
+            // },
+            {
+                "targets": 'details-control',                
+                "className": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '',
-            },
-            {
-                "targets": '_all',
-                "type": 'html'
-            },
-            {
-                "targets": 'details-control',
+                //"width": '1px' //padding + icon width... doet niks?
                 // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
                 //     if (true) {
                 //         //console.log(rowData);
                 //         //$(td).addClass('details-control');
                 //     }
                 // },
-                "className": 'details-control',
-                "orderable": false,
-                "data": null,
-                "defaultContent": '',
-                //"width": '1px' //padding + icon width... doet niks?
             },
             {
-                "targets": 'titlecolumn',
-                "className": 'titlecolumn'
+                "targets": 'title',
+                "className": 'title'
             },
             {
                 "targets": 'noVis',
@@ -165,21 +188,22 @@ function makeDataTable(tableid, mode = 'sheet') {
             //     "targets": 'collection',
             //     "data": 'collection'
             // },
-            {
-                "targets": 'urlCol',
-                "className": 'urlCol',
-                // "type": 'html',
-                // "width": "20",
-                // "render": function ( data, type, row ) {
-                //     return ;
-                // }
-                // "render": function (data, type, row, meta) {
-                //     let celltext = $(data).text();
-                //     //return '<a href="'+data+'">' + table.column(meta.col).header() + '</a>'; //werkt niet? zou column header moeten weergeven
-                //     return (data ? '<a class="tableLink" title="' + celltext + '" href="' + celltext + '">' + celltext.substr(0, 20) + 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</a>' : '<a href="' + data + '">search</a>');
-                // },
-                //"visible": false
-            }],
+            // {
+            //     "targets": 'urlCol',
+            //     "className": 'urlCol',
+            //     // "type": 'html',
+            //     // "width": "20",
+            //     // "render": function ( data, type, row ) {
+            //     //     return ;
+            //     // }
+            //     // "render": function (data, type, row, meta) {
+            //     //     let celltext = $(data).text();
+            //     //     //return '<a href="'+data+'">' + table.column(meta.col).header() + '</a>'; //werkt niet? zou column header moeten weergeven
+            //     //     return (data ? '<a class="tableLink" title="' + celltext + '" href="' + celltext + '">' + celltext.substr(0, 20) + 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</a>' : '<a href="' + data + '">search</a>');
+            //     // },
+            //     //"visible": false
+            //}
+            ],
             // "columns": [{
             //     "render": function ( data, type, row, meta ) {
             //         return '<a href="'+data+'">Download</a>';
@@ -223,7 +247,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                         }
                         else if (th.classList.contains("linkedinfo")) {
                             $("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty();
-                            linkedSheetType.forEach(function (value, index, array) {
+                            linkedsheetTypes.forEach(function (value, index, array) {
                                 $('<div class="nowrap"><input type="checkbox" id="' + th.innerText + value + '" name="' + th.innerText + '" value="' + value + '" class="headercheckbox" />' +
                                     '<label for="' + th.innerText + value + '">' + value + '</label></div>')
                                     .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
@@ -236,7 +260,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                                 //filter in column 1, with an regex, no smart filtering, not case sensitive
                                 column.search(checkboxes, true, false, false).draw(false);
                             });
-                            dropdowns.set(column.index(), linkedSheetType);
+                            dropdowns.set(column.index(), linkedsheetTypes);
                         }
                         else if (th.classList.contains("date")) {
                             $('<input type="search" id="' + th.innerText + '" name="' + th.innerText + '" class="headersearch" />')
@@ -305,7 +329,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                     });
                     // console.log(dropdowns);
                     // console.log(hiddenDropdowns);
-                    
+
                     let filterel = document.getElementById(tableid + "_filter");
                     let filterinput = filterel.querySelector("input");
                     $(filterinput).autocomplete({
@@ -459,23 +483,25 @@ function format(h, d) {
 // });
 
 function createTooltips(table) {
-    const xmltag = /[^A-Za-z0-9-]/gi;
+
     table.getAttribute("id");
-    console.log("TOOLTIPSTER: " + table.getAttribute("id"));
+    //console.log("TOOLTIPSTER: " + table.getAttribute("id"));
     $(table).find('.idtip:not(.tooltipstered)').tooltipster({
         content: 'Loading...',//'Loading...',
         // 'instance' is basically the tooltip. More details in the "Object-oriented Tooltipster" section.
         functionBefore: function (instance, helper) {
             let el = helper.origin;
             var $origin = $(helper.origin);
-            let sheet, value, query;
+            let query;
             // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
             if ($origin.data('loaded') !== true) {
                 if (el.textContent) {
-                    sheet = el.getAttribute("sheet").replace(xmltag, "_");
-                    value = el.textContent.replace(xmltag, "_");
+                    //sheet = el.getAttribute("sheet").replace(xmltag, "_");
+
+                    //value = el.textContent.replace(xmltag, "_");
                     //query = xml.querySelector(sheet + " " + value);
-                    query = xml.getElementsByTagName(value)[0];
+                    //query = xml.getElementsByTagName(value)[0];
+                    query = allElements.get(el.textContent);
                     //console.log(value);
                     if (query) {
                         let result = Array.from(query.attributes, function ({ name, value }) {

@@ -3,6 +3,8 @@ var xml, xslHeader, xslTable, xslTooltip;
 let promiseXslHeader, promiseXslTooltip;
 const isEdge = (window.navigator.userAgent.indexOf("Edge") > -1);
 let spinner, progressBar;
+var allElements = new Map();
+const xmltag = /[^A-Za-z0-9-]/gi;
 
 function detectEdge() {
     return (window.navigator.userAgent.indexOf("Edge") > -1)
@@ -23,6 +25,12 @@ document.addEventListener('DOMContentLoaded', function () {
         xml = xmlDoc;
         // targetElement.appendChild(progressBar);
         // targetElement.appendChild(spinner);
+        databaseKeys(xml);
+
+        xml.querySelectorAll('*').forEach(function(node) {
+            // Do whatever you want with the node object.
+            if (node.attributes[0]) allElements.set(node.attributes[0].value, node);
+        });
 
         //XSL
         promiseXslHeader = loadDoc('xsl/sheet-header.xsl');
@@ -40,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //XSL DATABASE
         reflect(promiseXslHeader).then(function (v) {
-            loadDoc('xsl/database.xsl').then(function (xsl) {
+            loadDoc('xsl/database.xsl', false).then(function (xsl) {
                 xslTable = xsl;
 
                 targetElement.appendChild(spinner);
@@ -49,8 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // });
 
                 //EXTRA for database version:
-                transform(xml, xslTable, { edge: isEdge, types: linkedSheetType.join() }, targetElement).then(function () {
-                    any = makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"), 'database');
+                transform(xml, xslTable, { edge: isEdge, types: Array.from(linkedsheetTypes).join() }, targetElement).then(function () {
+                    //document.getElementById("status").appendChild(spinner);
+                    makeDataTable(document.querySelector("table.mainsheet").getAttribute("id"), 'database');
                     // loadDoc('xsl/sheet-tooltip.xsl', caching).then(function (xsl) {
                     //     xslTooltip = xsl;
                     // })

@@ -225,8 +225,9 @@ tr.detailsRow td {
     background-color: #ededed; /* same as .child */
 }
 
-td.titlecolumn {
-    font-weight: bold 
+td.title {
+    font-weight: bold;
+    font-style: italic;
 }
 
 /*normal datatable*/
