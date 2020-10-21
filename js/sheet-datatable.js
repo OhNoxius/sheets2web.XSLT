@@ -3,7 +3,7 @@ function makeDataTable(tableid, mode = 'sheet') {
     let dTable;
     let dropdowns = new Map();
     const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    let scrollY, tabledom, filterlabel, scrollCollapse;
+    let scrollY, dtdom, filterlabel, scrollCollapse;
     let celval;
     let hiddenDropdowns = [];
 
@@ -24,13 +24,13 @@ function makeDataTable(tableid, mode = 'sheet') {
         //LINKEDINFO: look up number of ids for each type (CAN LOOK FOR @omvang, @size, ... to be more accurate?)
         table.querySelectorAll('td.linkedinfo').forEach(function (node) {
             if (linkMap.has(node.getAttribute("linkid"))) {
-                linkMap.get(node.getAttribute("linkid")).forEach(function (value, key, map) {                    
+                linkMap.get(node.getAttribute("linkid")).forEach(function (value, key, map) {
                     node.innerHTML += '<div class="typeicon ' + key + '" title="type: ' + key + '">' +
                         key + ':' + '<span class="cssnumbers">' + value + '</span>' +
                         '</div>';
                 });
             }
-        });        
+        });
 
         //TOOLTIPS
         // var getTooltip = function (sheetArg, idArg) {
@@ -72,13 +72,13 @@ function makeDataTable(tableid, mode = 'sheet') {
 
         if (mode == 'sheet') {
             scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
-            tabledom = "ftir";
+            dtdom = "ftir";
             filterlabel = "Filter '" + tableid + "':";
             scrollCollapse = true;
         }
         else if (mode == 'database') {
             scrollY = vh - 50 - 36 - 16 - 50 - ((linkedsheetTypes.size - 2) * 18);
-            tabledom = "tirf";
+            dtdom = "tirf";
             //document.querySelector("header").style.background = "linear-gradient(0deg, lightblue, transparent)";
             if ($('table.mainsheet th.linkedinfo').index() > 0) {
                 orderColumns[0][0] += 1;
@@ -90,20 +90,21 @@ function makeDataTable(tableid, mode = 'sheet') {
         }
         else if (mode == "child") {
             scrollY = '';
-            tabledom = "ftr";
+            dtdom = "ftr";
             filterlabel = "Filter:";
             scrollCollapse = true;
         }
 
         //console.log(noVis);
+        let noVisLength = noVis.length;
 
 
         //INITIALIZE DATATABLE:
         //---------------------
         dTable = $(table).DataTable({
-            responsive: true,
-            "autoWidth": true,
-            "dom": tabledom,
+            //responsive: true,
+            "autoWidth": false, //overwrites width options below
+            "dom": dtdom,
             "ordering": true,
             "order": orderColumns, //[[0, 'asc'], [1, 'asc']],
             "order-column": true,
@@ -114,12 +115,11 @@ function makeDataTable(tableid, mode = 'sheet') {
             "scrollY": scrollY,
             "scrollCollapse": scrollCollapse,
             // "fixedColumns": true,
-            /* "dom": '<"top"i>ft', */
             "createdRow": function (row, data, dataIndex) {
                 //if (!isDatabase) {
                 let hasDetails = false;
                 //let dataNoVis = data.slice(noVis[0]).reduce( (accumulator, currentValue, currentIndex, array) => accumulator + currentValue );
-                for (let i = 0; i < noVis.length; i++) {
+                for (let i = 0; i < noVisLength; i++) {
                     if (data[noVis[i]]) {
                         hasDetails = true;
                         break;
@@ -129,80 +129,80 @@ function makeDataTable(tableid, mode = 'sheet') {
                 //}
             },
             "columnDefs": [
-            //{
-            //     "targets": 'details',
-            //     "orderable": false,
-            //     "data": null,
-            //     "defaultContent": '',
-            // },
-            // {
-            //     "targets": '_all',
-            //     "type": 'html'
-            // },
-            // {
-            //     "targets": 'linkedinfo',
-            //     "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
-            //         //td.innerText = td.getAttribute("linkid");
-            //         //let typediv = document.createElement('div');
-            //         td.innerHTML = "";
-            //         if (linkMap.has(td.getAttribute("linkid"))) {
-            //             linkMap.get(td.getAttribute("linkid")).forEach(function (value, key, map) {            //                 
-            //                 td.innerHTML += '<div class="typeicon ' + key + '" title="type: ' + key + '">' +
-            //                     key + ':' + '<span class="cssnumbers">' + value + '</span>' +
-            //                     '</div>';
-            //                     cellData += key+ " , ";
-            //                 td.innerHTML = cellData;
-            //             });
-            //         }
-            //     },
-            // },
-            {
-                "targets": 'details-control',                
-                "className": 'details-control',
-                "orderable": false,
-                "data": null,
-                "defaultContent": '',
-                //"width": '1px' //padding + icon width... doet niks?
-                // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
-                //     if (true) {
-                //         //console.log(rowData);
-                //         //$(td).addClass('details-control');
-                //     }
+                //{
+                //     "targets": 'details',
+                //     "orderable": false,
+                //     "data": null,
+                //     "defaultContent": '',
                 // },
-            },
-            {
-                "targets": 'title',
-                "className": 'title'
-            },
-            {
-                "targets": 'noVis',
-                "visible": false
-            },
-            {
-                "targets": 'date',
-                "className": 'date',
-                "width": 'calc(10ex + 10px)', // ex = hoogte van "x", genoeg voor 10 karakters yyyy-mm-dd
-                //"type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
-            },
-            // {
-            //     "targets": 'collection',
-            //     "data": 'collection'
-            // },
-            // {
-            //     "targets": 'urlCol',
-            //     "className": 'urlCol',
-            //     // "type": 'html',
-            //     // "width": "20",
-            //     // "render": function ( data, type, row ) {
-            //     //     return ;
-            //     // }
-            //     // "render": function (data, type, row, meta) {
-            //     //     let celltext = $(data).text();
-            //     //     //return '<a href="'+data+'">' + table.column(meta.col).header() + '</a>'; //werkt niet? zou column header moeten weergeven
-            //     //     return (data ? '<a class="tableLink" title="' + celltext + '" href="' + celltext + '">' + celltext.substr(0, 20) + 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</a>' : '<a href="' + data + '">search</a>');
-            //     // },
-            //     //"visible": false
-            //}
+                // {
+                //     "targets": '_all',
+                //     "type": 'html'
+                // },
+                // {
+                //     "targets": 'linkedinfo',
+                //     "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
+                //         //td.innerText = td.getAttribute("linkid");
+                //         //let typediv = document.createElement('div');
+                //         td.innerHTML = "";
+                //         if (linkMap.has(td.getAttribute("linkid"))) {
+                //             linkMap.get(td.getAttribute("linkid")).forEach(function (value, key, map) {            //                 
+                //                 td.innerHTML += '<div class="typeicon ' + key + '" title="type: ' + key + '">' +
+                //                     key + ':' + '<span class="cssnumbers">' + value + '</span>' +
+                //                     '</div>';
+                //                     cellData += key+ " , ";
+                //                 td.innerHTML = cellData;
+                //             });
+                //         }
+                //     },
+                // },
+                // {
+                //     "targets": 'details-control',
+                //     //"className": 'details-control',
+                //     "orderable": false,
+                //     "data": null,
+                //     "defaultContent": '',
+                //     //"width": '1px' //padding + icon width... doet niks?
+                //     // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
+                //     //     if (true) {
+                //     //         //console.log(rowData);
+                //     //         //$(td).addClass('details-control');
+                //     //     }
+                //     // },
+                // },
+                {
+                    "targets": 'title',
+                    "className": 'title'
+                },
+                {
+                    "targets": 'noVis',
+                    "visible": false
+                },
+                {
+                    "targets": 'date',
+                    "className": 'date',
+                    "width": 'calc(10ex + 10px)', // ex = hoogte van "x", genoeg voor 10 karakters yyyy-mm-dd
+                    //"type": "date" //dit zorgt ervoor dat onvolledige data (-00-00) niet juist gesorteerd worden??
+                },
+                // {
+                //     "targets": 'collection',
+                //     "data": 'collection'
+                // },
+                // {
+                //     "targets": 'urlCol',
+                //     "className": 'urlCol',
+                //     // "type": 'html',
+                //     // "width": "20",
+                //     // "render": function ( data, type, row ) {
+                //     //     return ;
+                //     // }
+                //     // "render": function (data, type, row, meta) {
+                //     //     let celltext = $(data).text();
+                //     //     //return '<a href="'+data+'">' + table.column(meta.col).header() + '</a>'; //werkt niet? zou column header moeten weergeven
+                //     //     return (data ? '<a class="tableLink" title="' + celltext + '" href="' + celltext + '">' + celltext.substr(0, 20) + 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</a>' : '<a href="' + data + '">search</a>');
+                //     // },
+                //     //"visible": false
+                //}
             ],
             // "columns": [{
             //     "render": function ( data, type, row, meta ) {
@@ -252,6 +252,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                                     '<label for="' + th.innerText + value + '">' + value + '</label></div>')
                                     .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()));
                             });
+                            //$("table.mainsheet thead tr:eq(1) th").attr("colspan", "2");
                             $('input:checkbox').on('change', function (e) {
                                 //build a regex filter string with an or(|) condition
                                 let checkboxes = $('input:checkbox:checked').map(function () {
@@ -274,7 +275,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                                 });
                         }
                         else {
-                            let input = $('<input type="search" size="10" list="' + th.innerText + '-list" id="' + th.innerText + '-input" name="' + th.innerText + '" class="headersearch" />'
+                            let input = $('<input type="search" size="10" autocomplete="off" list="' + th.innerText + '-list" id="' + th.innerText + '-input" name="' + th.innerText + '" class="headersearch" />'
                             )//+ '<datalist id="' + th.innerText + '-list"></datalist>')
                                 //.appendTo($(column.footer()).empty())
                                 .appendTo($("table.mainsheet thead tr:eq(1) th").eq(column.index()).empty())
@@ -302,7 +303,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                             }
                             else {
                                 //OPTION 1: HTML5 datalists
-                                // ////column.data().unique().sort().each(function (d, j) {
+                                ////column.data().unique().sort().each(function (d, j) {
                                 // let datalist = $('<datalist id="' + th.innerText + '-list"></datalist>').insertAfter($(input));
                                 // ARR.forEach(function (val) {
                                 //     datalist.append('<option value="' + val + '" />')

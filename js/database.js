@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadDoc(datafile, caching, document.getElementById("statusBar")).then(function (xmlDoc) {
         xml = xmlDoc;
         // targetElement.appendChild(progressBar);
-        // targetElement.appendChild(spinner);
+        targetElement.appendChild(spinner);
         databaseKeys(xml);
 
         xml.querySelectorAll('*').forEach(function(node) {
