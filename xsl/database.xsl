@@ -32,10 +32,15 @@
 	</xsl:variable>-->
 
 	<!-- KEYS -->
-	<!--<xsl:key name="linkedsheet-ids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[local-name(.) = name(/*[1]/*[1])]" />-->
+	<xsl:key name="linkids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[name(.) = name(/*[1]/*[1])][1]" />
 	<!--<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])]))"/>-->
 	<!--<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />-->
 	<xsl:key name="allElements" match="*" use="attribute::*[1]" />
+
+	<!--<xsl:key name="ids" match="/*[1]/*[1]/*" use="@id" />-->
+	<!--<xsl:key name="idsToSplit" match="/*[1]/*[1]/*[contains(@id, '&#xA;')]" use="@id" />-->
+
+	
 
 	<!-- ############# -->
 	<!-- ### START ### -->
@@ -60,12 +65,18 @@
 
 	<!-- LINKED SHEET -->
 	<xsl:template match="*" mode="linkedsheet">
+		<!--<xsl:variable name="linkidsToSplit" select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')]" />-->
 		<table id="{$id}+" class="linkedsheet row-border">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
 			<tbody>
-				<xsl:apply-templates select="child::*[contains(attribute::*[local-name() = $mainsheet][1], $id)]" mode="autovalues" />
+				<!-- METHOD 1: check all nodes if @linkid CONTAINS @id -->
+				<!--<xsl:apply-templates select="child::*[contains(attribute::*[local-name() = $mainsheet][1], $id)]" mode="autovalues" />-->
+				
+				<!-- METHOD 2: use key for @linkid == @id (faster) + check remaining nodes for @linkid containing @id => FASTER OR SLOWER????? -->
+				<xsl:apply-templates select="key('linkids', $id)" mode="autovalues" />
+				<xsl:apply-templates select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')][contains(attribute::*[name(.) = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />
 			</tbody>
 		</table>
 	</xsl:template>
@@ -102,7 +113,6 @@
 					<xsl:value-of select="substring(local-name($linkedsheetNode), 2)" />
 				</th>
 			</xsl:if>
-
 			<!--<xsl:apply-templates select="attribute::*[local-name() = $mainsheet]" mode="linkedinfo-header" />-->
 
 			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet][not(starts-with(name(.), '_'))]" mode="attributes-header">
@@ -144,7 +154,7 @@
 	</xsl:template>
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
-	<xsl:template match="child::*" mode="autovalues">
+	<xsl:template match="*" mode="autovalues">
 		<xsl:variable name="currentID" select="string(@id)" />
 		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
@@ -203,11 +213,11 @@
 			<!-- END hover tooltip -->
 			<!--<xsl:if test="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]">-->
 			<span>
-				<xsl:if test="key('allElements', current())">
+				<!--<xsl:if test="key('allElements', current())">
 					<xsl:attribute name="class">
 						<xsl:text>idtip</xsl:text>
 					</xsl:attribute>
-				</xsl:if>
+				</xsl:if>-->
 				<!--<xsl:attribute name="sheet">
 					<xsl:value-of select="local-name(.)" />
 				</xsl:attribute>-->
@@ -242,20 +252,20 @@
 		</td>
 		<!--</xsl:if>-->
 	</xsl:template>
-
+	
+	<xsl:template match="@*" mode="hiddencolumn">
+		<p class="details">
+			<xsl:value-of select="substring(name(.),2)" />
+			<xsl:text>: </xsl:text>
+			<xsl:value-of select="." />
+		</p>
+	</xsl:template>
 	<xsl:template match="@*[starts-with(substring(name(.),2), '-')]" mode="hiddencolumn">
 		<span class="padleft description">
 			<xsl:text>(</xsl:text>
 			<xsl:value-of select="." />
 			<xsl:text>)</xsl:text>
 		</span>
-	</xsl:template>
-	<xsl:template match="@*[starts-with(name(.), ':')]" mode="hiddencolumn">
-		<p class="details">
-			<xsl:value-of select="substring(name(.),2)" />
-			<xsl:text>: </xsl:text>
-			<xsl:value-of select="." />
-		</p>
 	</xsl:template>
 
 	<xsl:template match="child::*" mode="children-header" priority="0">
