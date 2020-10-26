@@ -213,14 +213,14 @@
 			<!-- END hover tooltip -->
 			<!--<xsl:if test="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]">-->
 			<span>
-				<!--<xsl:if test="key('allElements', current())">
+				<xsl:if test="key('allElements', current())">
 					<xsl:attribute name="class">
 						<xsl:text>idtip</xsl:text>
 					</xsl:attribute>
-				</xsl:if>-->
-				<!--<xsl:attribute name="sheet">
+				</xsl:if>
+				<xsl:attribute name="sheet">
 					<xsl:value-of select="local-name(.)" />
-				</xsl:attribute>-->
+				</xsl:attribute>
 				<xsl:value-of select="." />
 			</span>
 			<!-- COLUMN FORMAT FEATURES (could also be done in DataTables -->
