@@ -4,6 +4,7 @@ let promiseXslHeader, promiseXslTooltip;
 const isEdge = (window.navigator.userAgent.indexOf("Edge") > -1);
 let spinner, progressBar;
 var allElements = new Map();
+var allSheets = new Map();
 const xmltag = /[^A-Za-z0-9-]/gi;
 
 function detectEdge() {
@@ -30,6 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
         xml.querySelectorAll('*').forEach(function(node) {
             // Do whatever you want with the node object.
             if (node.attributes[0]) allElements.set(node.attributes[0].value, node);
+        });
+        xml.firstElementChild.childNodes.forEach(function(sheet) {
+            sheetElements = new Map();
+            sheet.childNodes.forEach(function(node) {
+                if (node.attributes[0]) sheetElements.set(node.attributes[0].value, node);
+            });
+            allSheets.set(sheet.tagName, sheetElements);
         });
 
         //XSL

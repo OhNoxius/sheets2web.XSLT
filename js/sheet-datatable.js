@@ -62,7 +62,12 @@ function makeDataTable(tableid, mode = 'sheet') {
         // });
 
         let noVis = [];
-        $(table).children('thead').children('tr:first-child').children('th.noVis').each(function () { noVis.push($(this).index()); });
+        let noVisMap = [];
+
+        $(table).children('thead').children('tr:first-child').children('th.noVis').each(function () { 
+            noVis.push($(this).index());
+            noVisMap[$(this).index()] = 1;
+        });
         let orderColumns;
         if (noVis.length) {
             orderColumns = [[1, 'asc']];
@@ -98,7 +103,6 @@ function makeDataTable(tableid, mode = 'sheet') {
         //console.log(noVis);
         let noVisLength = noVis.length;
 
-
         //INITIALIZE DATATABLE:
         //---------------------
         dTable = $(table).DataTable({
@@ -117,15 +121,17 @@ function makeDataTable(tableid, mode = 'sheet') {
             // "fixedColumns": true,
             "createdRow": function (row, data, dataIndex) {
                 //if (!isDatabase) {
-                let hasDetails = false;
+                //let hasDetails = false;
                 //let dataNoVis = data.slice(noVis[0]).reduce( (accumulator, currentValue, currentIndex, array) => accumulator + currentValue );
-                for (let i = 0; i < noVisLength; i++) {
-                    if (data[noVis[i]]) {
-                        hasDetails = true;
-                        break;
-                    }
-                }
-                if (hasDetails) $(row).children("td.details").addClass('details-control');
+                let dataNoVis = data.map((x, i) => x.substring(0, x.length*noVisMap[i])).reduce( (accumulator, currentValue, currentIndex, array) => accumulator + currentValue );
+                // for (let i = 0; i < noVisLength; i++) {
+                //     if (data[noVis[i]]) {
+                //         hasDetails = true;
+                //         break;
+                //     }
+                // }
+                if (dataNoVis) $(row).children("td.details").addClass('details-control');
+                //if (hasDetails) $(row).children("td.details").addClass('details-control');
                 //}
             },
             "columnDefs": [
@@ -234,7 +240,10 @@ function makeDataTable(tableid, mode = 'sheet') {
                 }
             },
             "initComplete": function () {
+                //create tooltips
                 createTooltips(table);
+
+                //create table search headers with dropdowns
                 if (mode == 'database') {
                     //$('table#' + tableid + ' thead tr').clone(true).appendTo('#' + tableid + ' thead' );
                     this.api().columns().every(function () {
@@ -331,6 +340,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                     // console.log(dropdowns);
                     // console.log(hiddenDropdowns);
 
+                    //create dropdown options for native DataTables filter (at bottom)
                     let filterel = document.getElementById(tableid + "_filter");
                     let filterinput = filterel.querySelector("input");
                     $(filterinput).autocomplete({
@@ -493,16 +503,17 @@ function createTooltips(table) {
         functionBefore: function (instance, helper) {
             let el = helper.origin;
             var $origin = $(helper.origin);
-            let query;
+            let query, sheet;
             // we set a variable so the data is only loaded once via Ajax, not every time the tooltip opens
             if ($origin.data('loaded') !== true) {
                 if (el.textContent) {
-                    //sheet = el.getAttribute("sheet").replace(xmltag, "_");
+                    sheet = el.getAttribute("sheet").replace(xmltag, "_");
 
                     //value = el.textContent.replace(xmltag, "_");
                     //query = xml.querySelector(sheet + " " + value);
                     //query = xml.getElementsByTagName(value)[0];
-                    query = allElements.get(el.textContent);
+                    //query = allElements.get(el.textContent);
+                    query = allSheets.get(sheet).get(el.textContent);
                     //console.log(value);
                     if (query) {
                         let result = Array.from(query.attributes, function ({ name, value }) {
