@@ -162,20 +162,20 @@ function makeDataTable(tableid, mode = 'sheet') {
                 //         }
                 //     },
                 // },
-                // {
-                //     "targets": 'details-control',
-                //     //"className": 'details-control',
-                //     "orderable": false,
-                //     "data": null,
-                //     "defaultContent": '',
-                //     //"width": '1px' //padding + icon width... doet niks?
-                //     // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
-                //     //     if (true) {
-                //     //         //console.log(rowData);
-                //     //         //$(td).addClass('details-control');
-                //     //     }
-                //     // },
-                // },
+                {
+                    "targets": 'details-control', //DO THIS SO DATATABLES KNOWS IT HAS TO PRESERVE SPACE FOR THIS COLUMN! otherwise scrollbar?
+                    //"className": 'details-control',
+                    "orderable": false,
+                    //"data": null, //=> gives error above with data.map()??
+                    "defaultContent": '',
+                    "width": '21px' //padding + icon width... doet niks?
+                    // "createdCell": function (td, cellData, rowData, rowIndex, colIndex) {
+                    //     if (true) {
+                    //         //console.log(rowData);
+                    //         //$(td).addClass('details-control');
+                    //     }
+                    // },
+                },
                 {
                     "targets": 'title',
                     "className": 'title'
