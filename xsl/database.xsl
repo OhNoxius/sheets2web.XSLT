@@ -72,11 +72,11 @@
 			</thead>
 			<tbody>
 				<!-- METHOD 1: check all nodes if @linkid CONTAINS @id -->
-				<!--<xsl:apply-templates select="child::*[contains(attribute::*[local-name() = $mainsheet][1], $id)]" mode="autovalues" />-->
+				<xsl:apply-templates select="child::*[contains(attribute::*[name() = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />
 				
 				<!-- METHOD 2: use key for @linkid == @id (faster) + check remaining nodes for @linkid containing @id => FASTER OR SLOWER????? -->
-				<xsl:apply-templates select="key('linkids', $id)" mode="autovalues" />
-				<xsl:apply-templates select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')][contains(attribute::*[name(.) = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />
+				<!--<xsl:apply-templates select="key('linkids', $id)" mode="autovalues" />
+				<xsl:apply-templates select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')][contains(attribute::*[name(.) = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />-->
 			</tbody>
 		</table>
 	</xsl:template>
