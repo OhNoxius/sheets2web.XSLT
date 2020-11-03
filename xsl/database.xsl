@@ -261,11 +261,12 @@
 		</p>
 	</xsl:template>
 	<xsl:template match="@*[starts-with(substring(name(.),2), '-')]" mode="hiddencolumn">
-		<p class="details">
+		<xsl:text> </xsl:text>
+		<span class="description">
 			<xsl:text>(</xsl:text>
 			<xsl:value-of select="." />
 			<xsl:text>)</xsl:text>
-		</p>
+		</span>
 	</xsl:template>
 
 	<xsl:template match="child::*" mode="children-header" priority="0">
