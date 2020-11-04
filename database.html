@@ -40,7 +40,7 @@
 		//set source .xml filename
 		let datafile = getFilename();
 		//choose normal display (=false) or database mode (=true)
-		//const isDatabase = true;
+		//const databaseMode = true;
 		//set header title to display above table
 		let headerTitle;
 		//set drive link to display next to header title
@@ -49,7 +49,7 @@
 		let delimiter = ";";
 		let cashing = false; //disable cashing
 
-		//DON'T TOUCH			
+		//DON'T TOUCH
 		let keys = {};
 		let linkedsheetTypes = new Set();
 		let linkMap = new Map();
@@ -59,8 +59,10 @@
 <body>
 	<header>
 		<div id="heading"></div>
-		<div id="status">
-			<progress id="statusBar"></progress>
+		<div id="status">			
+			<progress id="statusBar">
+				<label for="statusBar">Loading xml:</label>
+			</progress>
 		</div>
 		<div id="activity"></div>
 		<!-- <div id="filters"></div> -->

@@ -37,19 +37,23 @@
 	<script src="js/database.js"></script>
 	<script src="js/sheet-datatable.js"></script>
 
-
 	<!-- NOG IMPLEMENTEREN:-->
 	<!-- <script src="js/timeline_render.js"></script> -->
 
 	<script>
-		let datafile = 'kc_roio.xml';
-		//const isDatabase = true;
-		let editLink = "https://docs.google.com/spreadsheets/d/1gTCRmbPqV-EL3g4KG7JdGnbVH5xIQvu0xcCTb7-JzKE/edit?usp=sharing";
+		//set source .xml filename
+		let datafile = getFilename();
+		//choose normal display (=false) or database mode (=true)
+		//const databaseMode = true;
+		//set header title to display above table
 		let headerTitle = "KC ROIO";
+		//set drive link to display next to header title
+		let editLink = "https://docs.google.com/spreadsheets/d/1gTCRmbPqV-EL3g4KG7JdGnbVH5xIQvu0xcCTb7-JzKE/edit?usp=sharing";
+		//choose character that will be used to separate content inside cells
 		let delimiter = ";";
 		let cashing = false; //disable cashing
 
-		//DON'T TOUCH			
+		//DON'T TOUCH
 		let keys = {};
 		let linkedsheetTypes = new Set();
 		let linkMap = new Map();
@@ -59,10 +63,13 @@
 <body>
 	<header>
 		<div id="heading"></div>
-		<div id="status">
-			<progress id="statusBar"></progress>
+		<div id="status">			
+			<progress id="statusBar">
+				<label for="statusBar">Loading xml:</label>
+			</progress>
 		</div>
 		<div id="activity"></div>
+		<!-- <div id="filters"></div> -->
 	</header>
 	<nav>
 		<div id="menu"></div>
