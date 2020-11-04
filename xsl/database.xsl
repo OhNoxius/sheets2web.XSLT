@@ -268,6 +268,11 @@
 			<xsl:text>)</xsl:text>
 		</span>
 	</xsl:template>
+	<xsl:template match="@*[starts-with(substring(name(.),2), '.')]" mode="hiddencolumn">
+		<p class="details">
+			<xsl:value-of select="." />
+		</p>
+	</xsl:template>
 
 	<xsl:template match="child::*" mode="children-header" priority="0">
 		<th class="noVis">
