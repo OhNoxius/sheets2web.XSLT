@@ -301,8 +301,11 @@ function makeDataTable(tableid, mode = 'sheet') {
                             }).unique().toArray();
                             //let ARR = column.nodes().toJQuery().map(function (val, i) { return $(val).text() });
                             //console.log(ARR);
-                            const delims = /([:+\r\n]+)/g // "+", ":" , newlines
-                            ARR = ARR.join(delimiter).replace(delims, ";").split(delimiter);
+                            //const delims = /([:+\r\n]+)/g // "+", ":" , newlines
+                            //const regexBrackets = /(?<!\s)\(/g;
+                            const delims = /([:+\r\n]+)|((?<!\s)\()/g
+                            let temp = ARR.join(delimiter).replace(delims, ";");                            
+                            ARR = temp.split(delimiter);
                             ARR.forEach((o, i, a) => a[i] = a[i].trim());
                             let SET = new Set(ARR);
                             ARR = [...SET].sort();
