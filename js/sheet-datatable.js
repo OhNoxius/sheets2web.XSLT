@@ -497,7 +497,6 @@ function format(h, d) {
 // });
 
 function createTooltips(table) {
-
     table.getAttribute("id");
     //console.log("TOOLTIPSTER: " + table.getAttribute("id"));
     $(table).find('.idtip:not(.tooltipstered)').tooltipster({
@@ -543,14 +542,12 @@ function createHyperlinks(content) {
 
     // OPTION 1
     // let secondslash, thirdslash, shortURL;
-    // 
     //cellval = $(this).text(); //MOET ENKEL TEKST TOT EINDE LIJN ZIJN
     //secondslash = cellval.indexOf('/', cellval.indexOf('/') + 1);
     //thirdslash = cellval.indexOf('/', secondslash + 1);
     //if (cellval.slice(secondslash + 1, secondslash + 4) == 'www') shortURL = cellval.slice(secondslash + 5, thirdslash);
     //else shortURL = cellval.slice(secondslash + 1, thirdslash);
     //return "<a title='" + cellval + "' class='tableLink' href='" + $(this).text() + "' target='_blank'>" + shortURL + "</a>"
-    //
 
     // OPTION2: SLIM ALTERNATIEF, mr voorlopig nog volledig url weergave, en $ teken loopt mis
     let exp_match = /(\b(https?|):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; //find https?
@@ -558,5 +555,4 @@ function createHyperlinks(content) {
     let new_exp_match = /(^|[^\/])(www\.[\S]+(\b|$))/gim; //find www?
     let new_content = element_content.replace(new_exp_match, '$1<a class="url" title="http://$2" target="_blank" href="http://$2">$2</a>');
     return new_content;
-
 }
