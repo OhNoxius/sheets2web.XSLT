@@ -17,8 +17,8 @@
 		integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
 	<!-- DATATABLES -->
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.css"/>
-	<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css" />
+	<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
 
 	<!-- TOOLTIPSTER -->
 	<link rel="stylesheet" type="text/css" href="js/tooltipster/dist/css/tooltipster.bundle.min.css" />
@@ -30,14 +30,14 @@
 
 	<script src="js/helper functions/xslFunctions.js"></script>
 	<script src="js/helper functions/lastUpdated.js"></script>
-	
+
 	<script src="js/sheet.js"></script>
 	<script src="js/sheet-datatable.js"></script>
 
 	<script>
 		let isDatabase = false;
 		let page = window.location.pathname.split("/").pop();
-		let datafile = page.slice(0, page.indexOf(".")).concat(".xml"); //uses .xml file with same filename		
+		let datafile = page.slice(0, page.indexOf(".")).concat(".xml"); //uses .xml file with same filename
 		let headerTitle = "";
 		let editLink = ""; //paste Google Sheet link here
 	</script>
