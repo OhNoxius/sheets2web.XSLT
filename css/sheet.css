@@ -248,6 +248,7 @@ div.dataTables_wrapper div.dataTables_info {
     float: right;
     text-align: left;
     padding: 0;
+    font-size: 0.9rem;
 }
 .dataTables_wrapper .dataTables_filter input {
     margin-top: 0.2em;
