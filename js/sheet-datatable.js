@@ -76,7 +76,7 @@ function makeDataTable(tableid, mode = 'sheet') {
         else orderColumns = [[0, 'asc']];
 
         if (mode == 'sheet') {
-            scrollY = vh - 50 - 36 - 21 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
+            scrollY = vh - 50 - 36 - 24 - 16; //100% viewheight - heading - tableheader - searchbar  - footer
             dtdom = "ftir";
             filterlabel = "Filter '" + tableid + "':";
             scrollCollapse = true;
