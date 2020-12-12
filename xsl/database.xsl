@@ -32,10 +32,10 @@
 	</xsl:variable>-->
 
 	<!-- KEYS -->
-	<xsl:key name="linkids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="attribute::*[name(.) = name(/*[1]/*[1])][1]" />
+	<!--<xsl:key name="linkids" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(attribute::*[name(.) = name(/*[1]/*[1])][1])" />-->
 	<!--<xsl:key name="linkedsheet-ids_Type" match="/*[1]/*[starts-with(name(.), '_')]/*" use="concat(string(@type), '|', string(attribute::*[local-name(.) = name(/*[1]/*[1])]))"/>-->
 	<!--<xsl:key name="linkedsheet-types" match="/*[1]/*[starts-with(name(.), '_')]/*" use="string(@type)" />-->
-	<xsl:key name="allElements" match="*" use="attribute::*[1]" />
+	<xsl:key name="allElements" match="*" use="string(attribute::*[1])" />
 
 	<!--<xsl:key name="ids" match="/*[1]/*[1]/*" use="@id" />-->
 	<!--<xsl:key name="idsToSplit" match="/*[1]/*[1]/*[contains(@id, '&#xA;')]" use="@id" />-->
@@ -65,17 +65,17 @@
 
 	<!-- LINKED SHEET -->
 	<xsl:template match="*" mode="linkedsheet">
-		<!--<xsl:variable name="linkidsToSplit" select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')]" />-->
+		<!--<xsl:variable name="linkidsToSplit" select="/*[1]/*[starts-with(name(.), '_')]/*[attribute::*[name(.) = name(/*[1]/*[1])][1]][contains(string(.), '&#xA;')]" />-->
 		<table id="{$id}+" class="linkedsheet row-border">
 			<thead>
 				<xsl:apply-templates select="*[1]" mode="autoheader" />
 			</thead>
 			<tbody>
 				<!-- METHOD 1: check all nodes if @linkid CONTAINS @id -->
-				<xsl:apply-templates select="child::*[contains(attribute::*[name() = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />
+				<xsl:apply-templates select="child::*[attribute::*[name() = name(/*[1]/*[1])][1]][contains(string(.), string($id))]" mode="autovalues" />
 				
 				<!-- METHOD 2: use key for @linkid == @id (faster) + check remaining nodes for @linkid containing @id => FASTER OR SLOWER????? -->
-				<!--<xsl:apply-templates select="key('linkids', $id)" mode="autovalues" />
+				<!--<xsl:apply-templates select="key('linkids', string($id))" mode="autovalues" />
 				<xsl:apply-templates select="/*[1]/*[starts-with(name(.), '_')]/*[contains(attribute::*[name(.) = name(/*[1]/*[1])][1], '&#xA;')][contains(attribute::*[name(.) = name(/*[1]/*[1])][1], $id)]" mode="autovalues" />-->
 			</tbody>
 		</table>
@@ -213,7 +213,7 @@
 			<!-- END hover tooltip -->
 			<!--<xsl:if test="/*[1]/*[local-name(.) = local-name(current())]/*[attribute::*[1] = current()]">-->
 			<span>
-				<xsl:if test="key('allElements', current())">
+				<xsl:if test="key('allElements', string(current()))">
 					<xsl:attribute name="class">
 						<xsl:text>idtip</xsl:text>
 					</xsl:attribute>
