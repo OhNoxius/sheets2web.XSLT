@@ -510,7 +510,6 @@ function createTooltips(table) {
             if ($origin.data('loaded') !== true) {
                 if (el.textContent) {
                     sheet = el.getAttribute("sheet").replace(xmltag, "_");
-
                     //value = el.textContent.replace(xmltag, "_");
                     //query = xml.querySelector(sheet + " " + value);
                     //query = xml.getElementsByTagName(value)[0];
