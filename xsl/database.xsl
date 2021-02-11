@@ -115,8 +115,8 @@
 			</xsl:if>
 			<!--<xsl:apply-templates select="attribute::*[local-name() = $mainsheet]" mode="linkedinfo-header" />-->
 
-			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet][not(starts-with(name(.), '_'))]" mode="attributes-header">
-				<xsl:sort select="position()" order="ascending" data-type="number" />
+			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet and not(starts-with(name(.), '_'))]" mode="attributes-header">
+				<!--<xsl:sort select="position()" order="ascending" data-type="number" />-->
 			</xsl:apply-templates>
 
 			<xsl:apply-templates select="child::*" mode="children-header" />
@@ -155,7 +155,7 @@
 
 	<!-- RUN THROUGHT ATTRIBUTES: fill in values -->
 	<xsl:template match="*" mode="autovalues">
-		<xsl:variable name="currentID" select="string(@id)" />
+		<!--<xsl:variable name="currentID" select="string(@id)" />-->
 		<tr id="{@id}">
 			<xsl:apply-templates select="child::*[1]" mode="details-control-values" />
 			<!-- COUNT linked items -->
@@ -188,7 +188,7 @@
 			<!--<xsl:apply-templates select="attribute::*[local-name() = $mainsheet]" mode="linkedinfo-values" />-->
 
 			<xsl:apply-templates select="attribute::*[local-name() != $mainsheet]" mode="attributes-values">
-				<xsl:sort select="position()" order="ascending" data-type="number" />
+				<!--<xsl:sort select="position()" order="ascending" data-type="number" />-->
 			</xsl:apply-templates>
 
 			<xsl:apply-templates select="child::*" mode="children-values" />

@@ -302,7 +302,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                                 });
 
                             let ARR = column.data().map(function (value, index) {
-                                return value.replace(/<\/?[^>]+(>|$)/g, '\n');
+                                return value.replace(/<\/?[^>]+(>|$)/g, '\n'); //REMOVES HTML TAGS!!!
                             }).unique().toArray();
                             //let ARR = column.nodes().toJQuery().map(function (val, i) { return $(val).text() });
                             //const delims = /([:+\r\n]+)/g // "+", ":" , newlines
@@ -433,7 +433,7 @@ function makeDataTable(tableid, mode = 'sheet') {
                 title = row.column(idx + i).header();
                 if (cells.data()[i]) details = details + format($(title).html(), cells.data()[i]);
             }
-            if (detailsTable != "") detailsTable = '<table class="detailsTable">' + details + '</table>';
+            if (details != "") detailsTable = '<table class="detailsTable">' + details + '</table>';
 
             let childDiv = document.createElement('div');
             childDiv.classList.add("childdiv");
