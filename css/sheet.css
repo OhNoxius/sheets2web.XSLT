@@ -52,13 +52,12 @@ h5 {
     margin-left: 0.4em;
 }
 .details {
-    font-size: 0.8em;
+    font-size: 0.85em;
     font-style: italic;
     color: grey;
     margin-top: 0.6em;
     margin-bottom: 0;
 }
-
 .description {
     font-weight: normal;
     font-style: italic;
